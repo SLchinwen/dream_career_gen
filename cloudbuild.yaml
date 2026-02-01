@@ -1,40 +1,24 @@
 steps:
-  # -------------------------------------------------------------------------
-  # 步驟 1: 建置 Docker 映像檔 (Build)
-  # 使用 Docker 將您的程式碼打包，並貼上唯一的版本標籤 ($COMMIT_SHA)
-  # -------------------------------------------------------------------------
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'asia-east1-docker.pkg.dev/green-miracle-dream/dream-repo/dream-app:$COMMIT_SHA', '.']
-
-  # -------------------------------------------------------------------------
-  # 步驟 2: 上傳映像檔 (Push)
-  # 將打包好的檔案推送到您剛剛建立的 Artifact Registry 倉庫
-  # -------------------------------------------------------------------------
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'asia-east1-docker.pkg.dev/green-miracle-dream/dream-repo/dream-app:$COMMIT_SHA']
-
-  # -------------------------------------------------------------------------
-  # 步驟 3: 部署到 Cloud Run (Deploy)
-  # 指令 Cloud Run 下載最新的映像檔並啟動服務
-  # -------------------------------------------------------------------------
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
       - 'run'
       - 'deploy'
-      - 'dream-career-service'          # 這是您在 Cloud Run 上的服務名稱
+      - 'dream-career-service'
       - '--image'
       - 'asia-east1-docker.pkg.dev/green-miracle-dream/dream-repo/dream-app:$COMMIT_SHA'
       - '--region'
-      - 'asia-east1'                    # 台灣機房
+      - 'asia-east1'
       - '--platform'
       - 'managed'
-      - '--allow-unauthenticated'       # 允許公開存取 (讓大家都能連上網站)
+      - '--allow-unauthenticated'
       - '--port'
-      - '3000'                          # Rails 預設 Port
-
-# -------------------------------------------------------------------------
-# 最後確認: 確保映像檔有被正確記錄
-# -------------------------------------------------------------------------
+      - '3000'
 images:
   - 'asia-east1-docker.pkg.dev/green-miracle-dream/dream-repo/dream-app:$COMMIT_SHA'
+options:
+  logging: CLOUD_LOGGING_ONLY
