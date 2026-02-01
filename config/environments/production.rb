@@ -2,9 +2,10 @@ require "active_support/core_ext/integer/time"
 # Force deploy
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-  # 允許 GCP Cloud Run 主機（Host Authorization）
+  # Host 白名單：只允許下列主機，避免 DNS rebinding；/up 路徑已排除供 health check
+  config.hosts.clear
   config.hosts << "dream-career-service-225291605101.asia-east1.run.app"
-  config.hosts << /.+\.run\.app\z/  # 允許所有 *.run.app 子網域（同一專案其他服務）
+  config.hosts << /.+\.run\.app\z/
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
   # Code is not reloaded between requests.
@@ -82,13 +83,4 @@ Rails.application.configure do
 
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
-
-  # Enable DNS rebinding protection and other `Host` header attacks.
-  # config.hosts = [
-  #   "example.com",     # Allow requests from example.com
-  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
-  # ]
-  #
-  # Skip DNS rebinding protection for the default health check endpoint.
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
