@@ -2,7 +2,10 @@ require "active_support/core_ext/integer/time"
 # Force deploy
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-  config.hosts.clear
+  # 允許 GCP Cloud Run 主機（Host Authorization）
+  config.hosts << "dream-career-service-225291605101.asia-east1.run.app"
+  config.hosts << /.+\.run\.app\z/  # 允許所有 *.run.app 子網域（同一專案其他服務）
+  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
   # Code is not reloaded between requests.
   config.enable_reloading = false
@@ -89,4 +92,3 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
-Rails.application.configure { config.hosts.clear }
