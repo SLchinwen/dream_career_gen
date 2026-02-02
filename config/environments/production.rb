@@ -2,10 +2,12 @@ require "active_support/core_ext/integer/time"
 # Force deploy
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-  # Host 白名單：只允許下列主機，避免 DNS rebinding；/up 路徑已排除供 health check
-  config.hosts.clear
-  config.hosts << "dream-career-service-225291605101.asia-east1.run.app"
-  config.hosts << /.+\.run\.app\z/
+  # Host 白名單：Cloud Run 網址必須列在此處，否則會出現 Blocked hosts
+  # 修改後請 push 到 GitHub 並在 GCP 重新觸發部署，新 image 才會生效
+  config.hosts = [
+    "dream-career-service-225291605101.asia-east1.run.app",
+    /.+\.run\.app\z/
+  ]
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
   # Code is not reloaded between requests.

@@ -20,12 +20,15 @@ git push origin main
 
 ## 二、需要處理的環境項目
 
-### 1. 先完成推送與 GCP 重新部署（解決 Blocked hosts）
+### 1. Blocked hosts 仍出現時：請依序做這三件事
 
-| 步驟 | 說明 |
-|------|------|
-| 推送 | 執行 `git push origin main`，讓 GitHub 取得最新程式碼。 |
-| 重新部署 GCP | 在 GCP Console 的 Cloud Build 觸發一次建置，或使用 `gcloud builds submit`，讓 Cloud Run 使用含 Host 白名單的新 image。 |
+| 步驟 | 你做什麼 | 說明 |
+|------|----------|------|
+| 1. 推送 | 在本機執行 `git push origin main` | 讓 GitHub 上有最新的 `config/environments/production.rb`（含 Host 白名單）。 |
+| 2. 重新建置 | 在 GCP Console 開啟 **Cloud Build → 歷史紀錄**，對你的 repo 觸發一次 **「提交」建置**（或手動執行建置） | 會用 GitHub 上最新程式碼建新 image，不會用舊的。 |
+| 3. 等部署完成 | 等 Cloud Run 換成新 revision | 換好後再開 `dream-career-service-225291605101.asia-east1.run.app` 就不應再出現 Blocked hosts。 |
+
+**重要：** 只改程式碼或只 push 而不重新建置／部署，Cloud Run 仍會跑舊 image，所以畫面上還是會錯。一定要 **push → 觸發建置 → 等部署完成**。
 
 ### 2. GCP / Cloud Run 環境變數（可選）
 
