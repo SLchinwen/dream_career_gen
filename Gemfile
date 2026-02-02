@@ -55,6 +55,8 @@ group :development, :test do
 end
 
 group :development do
+  # Load .env for local API keys (avoid credentials:edit on Windows)
+  gem "dotenv-rails"
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 end

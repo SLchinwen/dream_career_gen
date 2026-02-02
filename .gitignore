@@ -1,0 +1,28 @@
+# 治理規範：以下檔案不得提交至 Git（含金鑰、本機與敏感檔）
+# 請勿移除此區塊，並勿將 .env 加入版本控制。
+.env
+.env.local
+.env.*.local
+
+# Rails
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/tmp/pids/*
+!/tmp/pids/.keep
+/storage/*
+!/storage/.keep
+/public/assets
+/node_modules
+/app/assets/builds/*
+!/app/assets/builds/.keep
+
+# 本機與敏感
+/config/master.key
+*.log
+.byebug_history
+
+# OS
+.DS_Store
+Thumbs.db

@@ -8,6 +8,8 @@
 | [02-ROADMAP.md](02-ROADMAP.md) | 階段規劃（第 0～3 階段） | 排程、sprint、功能開發順序 |
 | [03-USER-STORY.md](03-USER-STORY.md) | 使用情境與流程 | 驗收條件、測試情境、產品說明 |
 | [04-NEXT-ACTIONS.md](04-NEXT-ACTIONS.md) | 下一步行動與前置條件（如 API 金鑰） | 開工前檢查、交接、維運手冊 |
+| [05-API-KEYS-INJECTION.md](05-API-KEYS-INJECTION.md) | API 金鑰注入方式（credentials / 環境變數） | 本機與 GCP 設定金鑰時引用 |
+| [06-GIT-GOVERNANCE.md](06-GIT-GOVERNANCE.md) | Git 治理規範（不得提交 .env／金鑰、commit 前提醒） | 提交前自檢、新成員約定 |
 
 ---
 
