@@ -1,0 +1,355 @@
+<% content_for :title, "夢想職人照 - 看見未來的自己" %>
+
+<style>
+  .dream-career-page { max-width: 26rem; margin: 0 auto; padding: 2rem 1rem; font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif; }
+  .dream-career-page .hero { text-align: center; margin-bottom: 2rem; }
+  .dream-career-page .hero h1 { font-size: 1.75rem; font-weight: 700; color: #0f766e; margin-bottom: 0.5rem; }
+  .dream-career-page .hero .tagline { font-size: 1rem; color: #134e4a; font-weight: 500; }
+  .dream-career-page .encourage { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: 0.75rem; padding: 1rem 1.25rem; margin-bottom: 2rem; border-left: 4px solid #059669; }
+  .dream-career-page .encourage p { margin: 0; font-size: 0.9375rem; color: #065f46; line-height: 1.6; }
+  .dream-career-page .encourage strong { color: #047857; }
+  .dream-career-page label { display: block; font-weight: 600; margin-bottom: 0.375rem; color: #334155; font-size: 0.9375rem; }
+  .dream-career-page input[type="text"], .dream-career-page select { width: 100%; padding: 0.625rem 0.75rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; margin-bottom: 1rem; }
+  .dream-career-page input[type="text"]:focus, .dream-career-page select:focus { outline: none; border-color: #059669; }
+  .dream-career-page input[type="file"] { width: 100%; padding: 0.75rem; border: 2px dashed #94a3b8; border-radius: 0.5rem; background: #f8fafc; font-size: 0.875rem; margin-bottom: 1rem; cursor: pointer; }
+  .dream-career-page input[type="file"]:hover { border-color: #059669; background: #f0fdf4; }
+  .dream-career-page .hint { font-size: 0.75rem; color: #64748b; margin-top: -0.5rem; margin-bottom: 1rem; }
+  .dream-career-page button[type="submit"] { width: 100%; padding: 0.875rem 1.25rem; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; border-radius: 0.5rem; font-size: 1.0625rem; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3); }
+  .dream-career-page button[type="submit"]:hover { background: linear-gradient(135deg, #047857 0%, #065f46 100%); transform: translateY(-1px); }
+  .dream-career-page button[type="submit"]:disabled { background: #94a3b8; transform: none; cursor: not-allowed; box-shadow: none; }
+  .dream-career-page .result { margin-top: 2rem; padding: 1.25rem; border-radius: 0.75rem; background: #f0fdf4; border: 2px solid #86efac; }
+  .dream-career-page .result img { max-width: 100%; height: auto; border-radius: 0.5rem; display: block; margin-top: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .dream-career-page .result .error { color: #dc2626; font-weight: 500; }
+  .dream-career-page .result .loading { color: #047857; font-weight: 500; }
+  .dream-career-page .preview { max-width: 10rem; max-height: 10rem; object-fit: cover; border-radius: 0.5rem; margin-top: 0.5rem; border: 2px solid #86efac; }
+  .dream-career-page .timer { font-size: 1rem; font-weight: 600; color: #059669; margin-bottom: 0.5rem; }
+  .dream-career-page .btn-download { display: inline-block; margin-top: 1rem; padding: 0.625rem 1.25rem; background: #059669; color: white; border-radius: 0.5rem; font-weight: 600; text-decoration: none; cursor: pointer; border: none; font-size: 0.9375rem; }
+  .dream-career-page .btn-download:hover { background: #047857; }
+  .dream-career-page .success-msg { color: #065f46; font-weight: 600; margin-bottom: 0.5rem; }
+  .dream-career-page .career-custom { display: none; }
+  .dream-career-page .career-custom.visible { display: block; }
+  .dream-career-page .gender-options { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .dream-career-page .gender-options label { display: inline-flex; align-items: center; gap: 0.375rem; font-weight: 500; cursor: pointer; }
+  .dream-career-page .gender-options input[type="radio"] { margin: 0; }
+  .dream-career-page .page-footer { margin-top: 3rem; padding-top: 1.5rem; text-align: center; font-size: 0.8125rem; color: #059669; }
+</style>
+
+<div class="dream-career-page">
+  <div class="hero">
+    <h1>✨ 夢想職人照</h1>
+    <p class="tagline">看見未來的自己</p>
+  </div>
+
+  <div class="encourage">
+    <p><strong>勇敢追夢，未來屬於你！</strong> 上傳照片、選擇夢想職業，AI 將為你生成專屬的未來職人照。每一個夢想都值得被看見，堅持下去，你一定能成為想成為的人！</p>
+  </div>
+
+  <form id="dream-career-form">
+    <div>
+      <label for="image_file">上傳照片</label>
+      <input type="file" id="image_file" name="image_file" accept="image/*" required>
+      <p class="hint">請上傳一張人臉清晰的自拍照，方便 AI 辨識特徵。</p>
+      <img id="preview" class="preview" alt="" style="display: none;">
+    </div>
+
+    <div>
+      <label>性別</label>
+      <div class="gender-options">
+        <label><input type="radio" name="gender" value="男" checked> 男</label>
+        <label><input type="radio" name="gender" value="女"> 女</label>
+        <label><input type="radio" name="gender" value=""> 不指定</label>
+      </div>
+      <p class="hint">請選擇以確保生成時性別正確。</p>
+    </div>
+
+    <div>
+      <label for="student_id">姓名（選填）</label>
+      <input type="text" id="student_id" name="student_id" placeholder="例如：王小明">
+      <p class="hint">會顯示在照片下方的說明文字中。</p>
+    </div>
+
+    <div>
+      <label for="career">我的夢想職業</label>
+      <select id="career" name="career" required>
+        <option value="">請選擇或自行填寫</option>
+        <optgroup label="🍳 食">
+          <option value="廚師">廚師</option>
+          <option value="烘焙師">烘焙師</option>
+          <option value="營養師">營養師</option>
+          <option value="農夫">農夫</option>
+          <option value="調酒師">調酒師</option>
+        </optgroup>
+        <optgroup label="👔 衣">
+          <option value="服裝設計師">服裝設計師</option>
+          <option value="裁縫師">裁縫師</option>
+          <option value="模特兒">模特兒</option>
+        </optgroup>
+        <optgroup label="🏠 住">
+          <option value="建築師">建築師</option>
+          <option value="室內設計師">室內設計師</option>
+          <option value="土木工程師">土木工程師</option>
+        </optgroup>
+        <optgroup label="✈️ 行">
+          <option value="飛行員">飛行員</option>
+          <option value="太空人">太空人</option>
+          <option value="船長">船長</option>
+          <option value="列車駕駛">列車駕駛</option>
+          <option value="司機">司機</option>
+        </optgroup>
+        <optgroup label="🎭 娛樂">
+          <option value="音樂家">音樂家</option>
+          <option value="演員">演員</option>
+          <option value="歌手">歌手</option>
+          <option value="攝影師">攝影師</option>
+          <option value="作家">作家</option>
+          <option value="畫家">畫家</option>
+          <option value="運動員">運動員</option>
+          <option value="遊戲設計師">遊戲設計師</option>
+          <option value="主持人">主持人</option>
+          <option value="舞蹈家">舞蹈家</option>
+        </optgroup>
+        <optgroup label="💼 其他">
+          <option value="醫生">醫生</option>
+          <option value="老師">老師</option>
+          <option value="護理師">護理師</option>
+          <option value="律師">律師</option>
+          <option value="工程師">工程師</option>
+          <option value="警察">警察</option>
+          <option value="消防員">消防員</option>
+          <option value="科學家">科學家</option>
+          <option value="獸醫">獸醫</option>
+          <option value="魔術師">魔術師</option>
+          <option value="other">━━ 自行填寫 ━━</option>
+        </optgroup>
+      </select>
+      <div id="career_custom_wrap" class="career-custom">
+        <input type="text" id="career_custom" name="career_custom" placeholder="請輸入你的夢想職業">
+      </div>
+      <p class="hint">涵蓋食衣住行娛樂等各行各業，也可自行填寫。</p>
+    </div>
+
+    <button type="submit" id="submit-btn">生成我的夢想職人照</button>
+  </form>
+
+  <div id="result" class="result" style="display: none;">
+    <div id="timer-display" class="timer" style="display: none;"></div>
+    <div id="result-content"></div>
+  </div>
+
+  <footer class="page-footer">
+    綠色奇蹟公益服務網協會提供 2026
+  </footer>
+</div>
+
+<script>
+(function() {
+  const form = document.getElementById("dream-career-form");
+  const imageFileInput = document.getElementById("image_file");
+  const previewImg = document.getElementById("preview");
+  const careerSelect = document.getElementById("career");
+  const careerCustomWrap = document.getElementById("career_custom_wrap");
+  const careerCustomInput = document.getElementById("career_custom");
+  const studentIdInput = document.getElementById("student_id");
+  const submitBtn = document.getElementById("submit-btn");
+  const resultEl = document.getElementById("result");
+  const resultContent = document.getElementById("result-content");
+  const timerDisplay = document.getElementById("timer-display");
+
+  let timerInterval = null;
+  let startTime = 0;
+
+  function getCareerValue() {
+    if (careerSelect.value === "other") {
+      return (careerCustomInput.value || "").trim();
+    }
+    return (careerSelect.value || "").trim();
+  }
+
+  careerSelect.addEventListener("change", function() {
+    if (careerSelect.value === "other") {
+      careerCustomWrap.classList.add("visible");
+      careerCustomInput.required = true;
+      careerCustomInput.focus();
+    } else {
+      careerCustomWrap.classList.remove("visible");
+      careerCustomInput.required = false;
+      careerCustomInput.value = "";
+    }
+  });
+
+  function formatTimeSeq(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const h = String(d.getHours()).padStart(2, "0");
+    const min = String(d.getMinutes()).padStart(2, "0");
+    const s = String(d.getSeconds()).padStart(2, "0");
+    return y + m + day + h + min + s;
+  }
+
+  function sanitizeFilename(s) {
+    if (!s || !s.trim()) return "未填";
+    return String(s).replace(/[\\/:*?"<>|]/g, "_").trim().slice(0, 50) || "未填";
+  }
+
+  function startTimer() {
+    startTime = Date.now();
+    timerDisplay.style.display = "block";
+    timerInterval = setInterval(function() {
+      const sec = Math.floor((Date.now() - startTime) / 1000);
+      timerDisplay.textContent = "生成中… 已用時 " + sec + " 秒";
+    }, 1000);
+  }
+
+  function stopTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+  }
+
+  function escapeHtml(s) {
+    const div = document.createElement("div");
+    div.textContent = s;
+    return div.innerHTML;
+  }
+
+  function formatDateTime(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const h = String(d.getHours()).padStart(2, "0");
+    const min = String(d.getMinutes()).padStart(2, "0");
+    return y + "/" + m + "/" + day + " " + h + ":" + min;
+  }
+
+  function addCaptionToImage(imageDataUrl, studentName, career, callback) {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = function() {
+      const w = img.width;
+      const h = img.height;
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+      const name = (studentName && studentName.trim()) ? studentName.trim() : "　";
+      const now = formatDateTime(new Date());
+      const line1 = "姓名: " + name + " 我的夢想 是當一位 " + career;
+      const fontSize = Math.max(28, Math.round(w * 0.044));
+      const lineHeight = fontSize * 1.4;
+      const padX = Math.round(w * 0.03);
+      const padY = Math.round(h * 0.03);
+      ctx.font = fontSize + "px \"Microsoft JhengHei\", \"PingFang TC\", \"Noto Sans TC\", sans-serif";
+      ctx.strokeStyle = "#000";
+      ctx.fillStyle = "#fff";
+      ctx.lineWidth = fontSize * 0.25;
+      ctx.textBaseline = "bottom";
+      ctx.textAlign = "left";
+      const y1 = h - padY - lineHeight;
+      ctx.strokeText(line1, padX, y1);
+      ctx.fillText(line1, padX, y1);
+      ctx.textAlign = "right";
+      const y2 = h - padY;
+      ctx.strokeText(now, w - padX, y2);
+      ctx.fillText(now, w - padX, y2);
+      callback(canvas.toDataURL("image/png"));
+    };
+    img.onerror = function() { callback(imageDataUrl); };
+    img.src = imageDataUrl;
+  }
+
+  imageFileInput.addEventListener("change", function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      previewImg.src = url;
+      previewImg.style.display = "block";
+    } else {
+      previewImg.style.display = "none";
+      previewImg.src = "";
+    }
+  });
+
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const career = getCareerValue();
+    const studentId = studentIdInput.value.trim();
+    const gender = (form.querySelector('input[name="gender"]:checked') || {}).value || "";
+
+    if (!career) {
+      resultContent.innerHTML = '<span class="error">請選擇或輸入夢想職業。</span>';
+      resultEl.style.display = "block";
+      return;
+    }
+
+    const file = imageFileInput.files && imageFileInput.files[0];
+    if (!file) {
+      resultContent.innerHTML = '<span class="error">請上傳一張照片。</span>';
+      resultEl.style.display = "block";
+      return;
+    }
+
+    const imageUrl = await new Promise(function(resolve) {
+      const r = new FileReader();
+      r.onload = function() { resolve(r.result); };
+      r.readAsDataURL(file);
+    });
+
+    submitBtn.disabled = true;
+    resultEl.style.display = "block";
+    timerDisplay.style.display = "none";
+    resultContent.innerHTML = '<span class="loading">✨ 正在為你生成夢想職人照，約 10–30 秒，請稍候…</span>';
+    startTimer();
+
+    try {
+      const res = await fetch("/api/career_photo_fast", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image_url: imageUrl, career: career, gender: gender })
+      });
+      const data = await res.json();
+      const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
+      stopTimer();
+      timerDisplay.textContent = "完成！耗時 " + elapsedSec + " 秒";
+      timerDisplay.style.display = "block";
+
+      if (data.error) {
+        resultContent.innerHTML = '<span class="error">' + escapeHtml(data.error) + '</span>';
+        submitBtn.disabled = false;
+        return;
+      }
+      if (data.image_data_url) {
+        addCaptionToImage(data.image_data_url, studentId, career, function(captionedDataUrl) {
+          const timeSeq = formatTimeSeq(new Date());
+          const careerSafe = sanitizeFilename(career);
+          const studentSafe = sanitizeFilename(studentId);
+          const filename = timeSeq + "_" + careerSafe + "_" + studentSafe + ".png";
+          let html = '<p class="success-msg">🎉 你的夢想職人照完成囉！</p>';
+          html += '<img src="' + escapeHtml(captionedDataUrl) + '" alt="夢想職人照">';
+          html += '<button type="button" class="btn-download" data-url="' + escapeHtml(captionedDataUrl) + '" data-filename="' + escapeHtml(filename) + '">下載圖片</button>';
+          resultContent.innerHTML = html;
+          resultContent.querySelector(".btn-download").addEventListener("click", function() {
+            const url = this.getAttribute("data-url");
+            const fn = this.getAttribute("data-filename");
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = fn;
+            a.click();
+          });
+        });
+      } else {
+        resultContent.innerHTML = '<span class="error">未取得圖片，請再試一次。</span>';
+      }
+    } catch (err) {
+      stopTimer();
+      timerDisplay.style.display = "none";
+      resultContent.innerHTML = '<span class="error">請求失敗：' + escapeHtml(err.message) + '</span>';
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+})();
+</script>

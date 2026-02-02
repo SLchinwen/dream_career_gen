@@ -21,13 +21,14 @@
 
 ### 臉部特徵＋擬真圖（Replicate）
 
-- **模型建議**：Replicate 上的 **InstantID Photorealistic**（例如 `grandlineai/instant-id-photorealistic`）。
-- **原理**：上傳一張**參考人臉照片**＋**文字 Prompt**，模型會生成**保留臉部特徵**的擬真圖。
-- **流程**：  
-  1. 取得小朋友自拍（LINE 傳圖 → 透過 Messaging API 下載或取得可存取的 URL）。  
-  2. **Gemini**：依「希望職業」產生**英文 Prompt**，並註明「25 歲、擬真、職業情境」（例如：25-year-old Asian man in doctor's coat, professional photo）。  
-  3. **Replicate InstantID**：輸入 = **自拍圖片 URL**（或上傳後得到的 URL）＋ **Prompt** → 輸出 = 擬真職業照 URL。  
-- **注意**：InstantID 的輸入需為**圖片 URL**（Replicate 可接受 HTTPS 圖檔）。若 LINE 先傳圖給你，需先將圖片存到可對外存取的 URL（例如 GCS、S3 或自家 HTTPS 端點），再傳給 Replicate。
+本專案實作流程為**三階段**，詳見 [09-PRODUCT-SERVICE-STEPS.md](09-PRODUCT-SERVICE-STEPS.md)：
+
+1. **年齡變化（SAM）**：`AgeProgressionService` 將人臉長大至約 30 歲（失敗則用原圖）。
+2. **Prompt 生成（Gemini）**：依「希望職業」產生 25 歲擬真英文 Prompt。
+3. **職業照生成（InstantID）**：`InstantIdService` 以步驟 1 的人臉 URL ＋ 步驟 2 的 Prompt → 擬真職業照 URL。
+
+- **模型**：Replicate `grandlineai/instant-id-photorealistic`（InstantID Photorealistic）。
+- **注意**：InstantID 的輸入需為**圖片 URL**（Replicate 可接受 HTTPS 圖檔）。若 LINE 先傳圖給你，需先將圖片存到可對外存取的 URL（例如 GCS、S3 或自家 HTTPS 端點），再傳給本專案 API。
 
 ### 模擬年齡固定 25 歲
 
@@ -125,15 +126,16 @@
 
 ## 7.4 後端 API 與服務（已實作）
 
-本專案已提供：
+本專案已提供（完整流程見 [09-PRODUCT-SERVICE-STEPS.md](09-PRODUCT-SERVICE-STEPS.md)）：
 
 | 項目 | 說明 |
 |------|------|
-| **API** | `POST /api/career_photo`，參數 `image_url`、`career`，回傳 `{ "image_url": "..." }` |
+| **API** | `POST /api/career_photo`，參數 `image_url`、`career`，回傳 `{ "image_url": "...", "url_expires": true }` |
+| **年齡變化** | `AgeProgressionService.age_to(image_url:)` → SAM 模型，人臉長大至約 30 歲 |
 | **Gemini** | `GeminiService.prompt_for_photorealistic_career(career:)` → 25 歲擬真英文 Prompt |
 | **InstantID** | `InstantIdService.generate(image_url:, prompt:)` → Replicate `grandlineai/instant-id-photorealistic`，回傳擬真圖 URL |
 
-前端用 **Make + LINE** 時，只需在 Make 內：取得自拍 HTTPS URL、取得職業文字、POST 到上述 API、用回傳的 `image_url` 透過 LINE 回傳圖片即可。
+前端用 **Make + LINE** 時，只需在 Make 內：取得自拍 HTTPS URL、取得職業文字、POST 到上述 API、用回傳的 `image_url` 透過 LINE 回傳圖片即可。生成約需 **90–150 秒**，Make 請將 HTTP 逾時設長。
 
 ---
 

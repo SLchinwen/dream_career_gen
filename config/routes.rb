@@ -9,12 +9,14 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # 網頁版表單：上傳／貼圖＋選擇職業 → 生成職業照
+  # 夢想職人照（產品主頁）
+  root "pages#career_photo_fast"
+  get "career_photo_fast" => "pages#career_photo_fast", as: :career_photo_fast_page
   get "career_photo" => "pages#career_photo", as: :career_photo_page
-  root "pages#career_photo"
 
-  # API：自拍＋職業 → 25 歲擬真職業照（供 Make / LINE 串接）
+  # API：自拍＋職業 → 職業照
   namespace :api do
     resources :career_photos, only: [:create], path: "career_photo"
+    post "career_photo_fast" => "career_photos_fast#create"
   end
 end

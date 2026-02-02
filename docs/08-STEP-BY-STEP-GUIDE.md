@@ -1,6 +1,12 @@
-# 8. 一步一步操作指南（Make + LINE ＋ 本專案 API）
+# 8. 一步一步操作指南（Web ＋ Make + LINE ＋ 本專案 API）
 
-> 目標：讓使用者在 LINE 傳自拍＋職業 → Make 呼叫本專案 API → 回傳 25 歲擬真職業照。
+> 目標：從本機 Web 版測試開始，到 LINE 傳自拍＋職業 → Make 呼叫本專案 API → 回傳 25 歲擬真職業照。
+
+---
+
+## 產品服務步驟（三階段）
+
+本專案 API 內部流程：**① 年齡變化（SAM）→ ② Prompt 生成（Gemini）→ ③ 職業照生成（InstantID）**，詳見 [09-PRODUCT-SERVICE-STEPS.md](09-PRODUCT-SERVICE-STEPS.md)。
 
 ---
 
@@ -13,17 +19,26 @@
 
 ---
 
-## 第一步：確認後端 API 在本機可跑
+## 第一步：本機 Web 版測試（建議先做）
 
-1. 在專案目錄執行：`ruby bin/rails server`
-2. 另開終端機測試 API（請把圖片網址換成任一張人臉照片的 HTTPS URL，例如 [Unsplash 人像](https://unsplash.com/s/photos/portrait) 右鍵複製圖片網址）：
+1. 在專案目錄執行：`bin/dev` 或 `bin/rails server`
+2. 瀏覽器開啟 `http://localhost:3000`，應看到「夢想職業照」表單。
+3. 上傳一張人臉照片或貼上圖片網址，選擇職業（如「醫生」），點「生成職業照」。
+4. 等待約 **90–150 秒**，畫面會顯示生成圖與下載按鈕。確認流程正常後再進行 API 或 LINE 串接。
+
+---
+
+## 第二步：確認 API 在本機可跑（供 Make / 自動化呼叫）
+
+1. 在專案目錄執行：`bin/dev` 或 `bin/rails server`
+2. 另開終端機測試 API（請把圖片網址換成任一張人臉照片的 HTTPS URL，例如 [Unsplash 人像](https://unsplash.com/s/photos/portrait) 右鍵複製圖片網址；API 金鑰需已設定）：
 
    **Windows 建議用 PowerShell（避免 curl 引號／port 解析錯誤）：**
 
    ```powershell
    $img = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d"
    $body = @{ image_url = $img; career = "醫生" } | ConvertTo-Json
-   # 職業照生成約 60–90 秒，請延長逾時並把結果存到變數以顯示
+   # 職業照生成約 90–150 秒，請延長逾時並把結果存到變數以顯示
    $r = Invoke-RestMethod -Uri "http://localhost:3000/api/career_photo" -Method Post -Body $body -ContentType "application/json" -TimeoutSec 180
    $r | ConvertTo-Json
    $r.image_url
@@ -31,14 +46,14 @@
 
    （若要用 curl，請用 **curl.exe** 並把 JSON 存成檔案再 `-d @body.json`，避免 PowerShell 引號問題。）
 
-3. **請至少等 60–90 秒**再判斷有無回應；成功時 `$r.image_url` 會是圖片網址。若仍無輸出，看跑 server 的那個終端機是否有錯誤或 request log。
+3. **請至少等 90–150 秒**再判斷有無回應；成功時 `$r.image_url` 會是圖片網址。若仍無輸出，看跑 server 的那個終端機是否有錯誤或 request log。
 
 4. **圖片 URL 說明**：回傳的 `image_url` 為 Replicate 的 **暫時性連結**（`replicate.delivery`），數小時後可能失效。請在取得後**立即開啟或下載**。若在終端機看到網址被截斷（有 `…`），請用完整 URL：  
    `$r.image_url | Set-Clipboard` 可將完整網址複製到剪貼簿，再貼到瀏覽器開啟。
 
 ---
 
-## 第二步：讓 Make 能連到你的 API（本機用 ngrok）
+## 第三步：讓 Make 能連到你的 API（本機用 ngrok）
 
 1. 下載並安裝 [ngrok](https://ngrok.com/download)。
 2. 在終端機執行：`ngrok http 3000`
@@ -49,7 +64,7 @@
 
 ---
 
-## 第三步：LINE 官方帳號與 Messaging API
+## 第四步：LINE 官方帳號與 Messaging API
 
 1. 到 [LINE Developers](https://developers.line.biz/console/) 登入。
 2. 建立 **Provider**（若還沒有）→ 建立 **Channel**，類型選 **Messaging API**。
@@ -58,7 +73,7 @@
    - 發行 **Channel Access Token**（長期），記下 Token。
 4. 在 **Messaging API** 分頁的 **Webhook**：
    - 先不填 Webhook URL（等 Make 建好情境後，在 Make 取得 Webhook URL 再回來填）。
-   - 或若你要用 **Make 的 Webhook** 當觸發，就在 Make 建立「Webhooks」模組，取得 Make 的 Webhook URL；LINE 不直接填我們 Rails，而是填 Make 的 Webhook（見第四步）。
+   - 或若你要用 **Make 的 Webhook** 當觸發，就在 Make 建立「Webhooks」模組，取得 Make 的 Webhook URL；LINE 不直接填我們 Rails，而是填 Make 的 Webhook（見第六步）。
 
 **注意**：LINE 的「回應訊息」有兩種做法：  
 - **A**：LINE Webhook URL 填 **Make 的 Webhook**，由 Make 收 LINE 事件、呼叫我們 API、再呼叫 LINE Reply/Push。  
@@ -68,7 +83,7 @@
 
 ---
 
-## 第四步：在 Make 建立情境
+## 第五步：在 Make 建立情境
 
 1. 登入 [Make](https://www.make.com/)（原 Integromat）。
 2. 建立新 **Scenario**。
@@ -103,7 +118,7 @@
 
 ---
 
-## 第五步：LINE Webhook 設定（若用 Make 收 LINE 事件）
+## 第六步：LINE Webhook 設定（若用 Make 收 LINE 事件）
 
 1. 在 Make 情境中，**LINE - Watch events** 會顯示一個 **Webhook URL**（例如 `https://hook.eu1.make.com/xxx`）。
 2. 到 LINE Developers → 你的 Channel → **Messaging API** 分頁：
@@ -114,7 +129,7 @@
 
 ---
 
-## 第六步：端對端測試
+## 第七步：端對端測試
 
 1. 用手機 LINE 對你的官方帳號傳：**一張自拍照**。
 2. 再傳一句文字：**醫生**（或你約定的職業關鍵字）。
@@ -125,7 +140,8 @@
 
 ## 檢查清單
 
-- [ ] 本機 `bin/rails server` 可跑，curl POST `/api/career_photo` 有回傳 `image_url`
+- [ ] 本機 Web 版：`bin/rails server` 可跑，瀏覽 `http://localhost:3000` 可完成一次生成
+- [ ] 本機 API：curl / PowerShell POST `/api/career_photo` 有回傳 `image_url`
 - [ ] 本機用 ngrok 曝露 HTTPS，或已部署 Cloud Run 並有 URL
 - [ ] LINE Channel（Messaging API）已建立，Channel ID / Secret / Access Token 已記下
 - [ ] Make 情境：LINE 觸發 → 取得圖片 URL → 取得職業 → POST 到 `/api/career_photo` → LINE 回傳圖片
@@ -136,5 +152,6 @@
 
 ## 相關文件
 
-- API 與參數詳情： [07-LINE-AND-FACE-SCENARIO.md](07-LINE-AND-FACE-SCENARIO.md)  
-- 金鑰設定： [05-API-KEYS-INJECTION.md](05-API-KEYS-INJECTION.md)
+- **產品服務步驟**：[09-PRODUCT-SERVICE-STEPS.md](09-PRODUCT-SERVICE-STEPS.md)  
+- API 與參數詳情：[07-LINE-AND-FACE-SCENARIO.md](07-LINE-AND-FACE-SCENARIO.md)  
+- 金鑰設定：[05-API-KEYS-INJECTION.md](05-API-KEYS-INJECTION.md)

@@ -31,8 +31,9 @@
 |------|------|------|
 | **大腦（核心運算）** | Ruby on Rails 8 | Web 框架 |
 | **基地（雲端部署）** | Google Cloud Platform | Cloud Run + Cloud Build |
-| **文案智慧（Text AI）** | Google Gemini API | 依孩童描述生成繪圖用提示詞 (Prompt) |
-| **繪圖引擎（Image AI）** | Replicate API（Flux 或 SDXL） | 將提示詞轉成高品質、照片級圖像 |
+| **文案智慧（Text AI）** | Google Gemini API | 依職業生成 25 歲擬真繪圖 Prompt |
+| **年齡變化** | Replicate（SAM） | 將人臉長大至約 30 歲 |
+| **繪圖引擎（Image AI）** | Replicate（InstantID Photorealistic） | 保留臉部特徵的擬真職業照 |
 
 ---
 

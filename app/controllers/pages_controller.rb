@@ -5,4 +5,8 @@ class PagesController < ApplicationController
   def career_photo
     # 僅渲染表單頁，實際呼叫 API 由前端 JavaScript 發送 POST /api/career_photo
   end
+
+  def career_photo_fast
+    # 方案 B：純 Gemini 流程，速度較快
+  end
 end

@@ -1,0 +1,26 @@
+---
+description: Windows 環境差異：本專案在 Windows 上執行 Rails/腳本時需加 ruby 前綴
+alwaysApply: true
+---
+
+# Windows 環境指令
+
+本專案開發環境為 **Windows**。在 Windows 上直接執行 `bin/rails`、`bin/rake` 等無副檔名腳本，會觸發「選取應用程式以開啟」對話框。
+
+## 正確指令
+
+給予本專案終端機指令時，一律使用 `ruby` 前綴執行 bin 腳本：
+
+| 錯誤 | 正確 |
+|------|------|
+| `bin/rails server` | `ruby bin/rails server` |
+| `bin/rails test` | `ruby bin/rails test` |
+| `bin/rake db:migrate` | `ruby bin/rake db:migrate` |
+| `bin/dev` | `ruby bin/dev` |
+| `bundle exec rails ...` | `ruby -S bundle exec rails ...` 或 `ruby bin/rails ...` |
+
+## 範例
+
+- 啟動伺服器：`ruby bin/rails server`
+- 執行測試：`ruby bin/rails test`
+- 金鑰 + 啟動：`$env:GEMINI_API_KEY = "xxx"; ruby bin/rails server`

@@ -11,7 +11,9 @@
 | [05-API-KEYS-INJECTION.md](05-API-KEYS-INJECTION.md) | API 金鑰注入方式（credentials / 環境變數） | 本機與 GCP 設定金鑰時引用 |
 | [06-GIT-GOVERNANCE.md](06-GIT-GOVERNANCE.md) | Git 治理規範（不得提交 .env／金鑰、commit 前提醒） | 提交前自檢、新成員約定 |
 | [07-LINE-AND-FACE-SCENARIO.md](07-LINE-AND-FACE-SCENARIO.md) | 自拍＋職業擬真情境、25 歲擬真圖、LINE 官方帳號串接 | LINE @ 串接、InstantID、Webhook |
-| [08-STEP-BY-STEP-GUIDE.md](08-STEP-BY-STEP-GUIDE.md) | 一步一步操作（Make + LINE ＋ API） | 從本機測試到端對端 |
+| [08-STEP-BY-STEP-GUIDE.md](08-STEP-BY-STEP-GUIDE.md) | 一步一步操作（Web ＋ Make + LINE ＋ API） | 從本機測試到端對端 |
+| [09-PRODUCT-SERVICE-STEPS.md](09-PRODUCT-SERVICE-STEPS.md) | 產品服務步驟定義（年齡變化→Prompt→職業照） | 功能驗收、API 規格、本機測試、流程對齊 |
+| [10-DEPLOY-FOR-VOLUNTEERS.md](10-DEPLOY-FOR-VOLUNTEERS.md) | 發布給志工使用（GCP Cloud Run） | 部署、環境變數、志工網址 |
 
 ---
 

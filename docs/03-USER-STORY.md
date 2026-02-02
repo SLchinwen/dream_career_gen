@@ -36,9 +36,14 @@
 
 ---
 
-## 情境變體：自拍＋職業 → 25 歲擬真職業照（LINE）
+## 情境變體：自拍＋職業 → 25 歲擬真職業照（Web / LINE）
 
-若改為**小朋友上傳自拍照**與**希望職業**，系統以臉部特徵生成**25 歲擬真職業照**，並以 **LINE 官方帳號** 作為前端入口，請見 **[07-LINE-AND-FACE-SCENARIO.md](07-LINE-AND-FACE-SCENARIO.md)**（含 LINE Webhook、InstantID、實作順序與注意事項）。
+若改為**小朋友上傳自拍照**與**希望職業**，系統以臉部特徵生成**25 歲擬真職業照**。流程為：**① 年齡變化（SAM）→ ② Prompt 生成（Gemini）→ ③ 職業照生成（InstantID）**，詳見 [09-PRODUCT-SERVICE-STEPS.md](09-PRODUCT-SERVICE-STEPS.md)。
+
+| 入口 | 說明 |
+|------|------|
+| **Web 版** | 開啟 `/career_photo`，上傳照片或貼網址、選擇職業，約 90–150 秒後顯示擬真職業照 |
+| **LINE 官方帳號** | 使用者在 LINE 傳自拍＋職業 → Make 呼叫 API → 回傳圖片，見 [07-LINE-AND-FACE-SCENARIO.md](07-LINE-AND-FACE-SCENARIO.md) |
 
 ---
 
