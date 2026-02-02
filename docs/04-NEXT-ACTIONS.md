@@ -19,8 +19,8 @@
    取得 [Replicate API Token](https://replicate.com) 與 [Google Gemini API Key](https://aistudio.google.com/)，並用 Rails credentials 或環境變數注入（勿提交明文）。
 2. ~~**串接 Gemini**~~ ✅  
    `app/services/gemini_service.rb` 已完成：輸入「夢想描述」與可選性別／年齡，回傳英文繪圖用 Prompt。
-3. **串接 Replicate**  
-   新增 `app/services/replicate_service.rb`：輸入 Prompt，呼叫 Flux 或 SDXL 模型，回傳圖片 URL。
+3. ~~**串接 Replicate**~~ ✅  
+   `app/services/replicate_service.rb` 已完成：輸入 Prompt，呼叫 Flux Schnell，回傳圖片 URL。
 4. **後端流程**  
    新增 Controller（或 Job）：接收參數 → 呼叫 Gemini → 呼叫 Replicate → 回傳結果（或儲存後導向成果頁）。
 5. **第 2 階段**  

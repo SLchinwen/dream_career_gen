@@ -1,2 +1,137 @@
 [dotenv] Set [36mGEMINI_API_KEY[0m, [36mREPLICATE_API_TOKEN[0m
 [dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mGEMINI_API_KEY[0m, [36mREPLICATE_API_TOKEN[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mGEMINI_API_KEY[0m, [36mREPLICATE_API_TOKEN[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mGEMINI_API_KEY[0m, [36mREPLICATE_API_TOKEN[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mGEMINI_API_KEY[0m, [36mREPLICATE_API_TOKEN[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mGEMINI_API_KEY[0m, [36mREPLICATE_API_TOKEN[0m
+[dotenv] Loaded [33m.env[0m
+Started POST "/api/career_photo" for ::1 at 2026-02-03 00:42:29 +0800
+  [1m[35m (8.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY) /*application='DreamCareerGen'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='DreamCareerGen'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='DreamCareerGen'*/[0m
+Error occurred while parsing request parameters.
+Contents:
+
+{\
+Processing by Api::CareerPhotosController#create as */*
+Completed 400 Bad Request in 47ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+ActionDispatch::Http::Parameters::ParseError (Error occurred while parsing request parameters)
+Caused by: JSON::ParserError (expected object key, got '\' at line 1 column 2)
+
+Information for: ActionDispatch::Http::Parameters::ParseError (Error occurred while parsing request parameters):
+  
+app/controllers/api/career_photos_controller.rb:37:in 'Api::CareerPhotosController#set_default_format_json'
+
+Information for cause: JSON::ParserError (expected object key, got '\' at line 1 column 2):
+  
+app/controllers/api/career_photos_controller.rb:37:in 'Api::CareerPhotosController#set_default_format_json'
+Started POST "/api/career_photo" for ::1 at 2026-02-03 00:47:25 +0800
+Processing by Api::CareerPhotosController#create as HTML
+  Parameters: {"image_url" => "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d", "career" => "醫生", "career_photo" => {"image_url" => "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d", "career" => "醫生"}}
+Completed 422 Unprocessable Content in 1386ms (Views: 1.1ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.3ms)
+
+
+Started POST "/api/career_photo" for ::1 at 2026-02-03 00:47:36 +0800
+Processing by Api::CareerPhotosController#create as HTML
+  Parameters: {"image_url" => "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d", "career" => "醫生", "career_photo" => {"image_url" => "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d", "career" => "醫生"}}
+Completed 422 Unprocessable Content in 935ms (Views: 0.2ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/career_photo" for ::1 at 2026-02-03 00:49:01 +0800
+Processing by Api::CareerPhotosController#create as HTML
+  Parameters: {"career" => "醫生", "image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg", "career_photo" => {"career" => "醫生", "image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg"}}
+Completed 422 Unprocessable Content in 1086ms (Views: 0.1ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/career_photo" for ::1 at 2026-02-03 00:50:05 +0800
+Processing by Api::CareerPhotosController#create as HTML
+  Parameters: {"career" => "醫生", "image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg", "career_photo" => {"career" => "醫生", "image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg"}}
+Completed 422 Unprocessable Content in 1874ms (Views: 0.1ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+[dotenv] Set [36mGEMINI_API_KEY[0m, [36mREPLICATE_API_TOKEN[0m
+[dotenv] Loaded [33m.env[0m
+Started POST "/api/career_photo" for ::1 at 2026-02-03 00:52:40 +0800
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='DreamCareerGen'*/[0m
+Processing by Api::CareerPhotosController#create as HTML
+  Parameters: {"career" => "醫生", "image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg", "career_photo" => {"career" => "醫生", "image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg"}}
+Completed 200 OK in 140529ms (Views: 0.2ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/career_photo" for ::1 at 2026-02-03 00:58:39 +0800
+Processing by Api::CareerPhotosController#create as HTML
+  Parameters: {"career" => "醫生", "image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg", "career_photo" => {"career" => "醫生", "image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg"}}
+Completed 422 Unprocessable Content in 900ms (Views: 0.1ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/career_photo" for ::1 at 2026-02-03 00:59:23 +0800
+Processing by Api::CareerPhotosController#create as HTML
+  Parameters: {"career" => "醫生", "image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg", "career_photo" => {"career" => "醫生", "image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg"}}
+Completed 200 OK in 141648ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.5ms)
+
+
+[dotenv] Set [36mGEMINI_API_KEY[0m, [36mREPLICATE_API_TOKEN[0m
+[dotenv] Loaded [33m.env[0m
+Started GET "/career_photo" for ::1 at 2026-02-03 01:08:21 +0800
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='DreamCareerGen'*/[0m
+Processing by PagesController#career_photo as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering pages/career_photo.html.erb within layouts/application
+  Rendered pages/career_photo.html.erb within layouts/application (Duration: 0.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 193.3ms | GC: 0.0ms)
+Completed 200 OK in 552ms (Views: 200.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/career_photo" for ::1 at 2026-02-03 01:08:54 +0800
+Processing by Api::CareerPhotosController#create as */*
+  Parameters: {"image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg", "career" => "太空人", "career_photo" => {"image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg", "career" => "太空人"}}
+Completed 200 OK in 136929ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/career_photo" for ::1 at 2026-02-03 01:20:21 +0800
+Processing by PagesController#career_photo as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering pages/career_photo.html.erb within layouts/application
+  Rendered pages/career_photo.html.erb within layouts/application (Duration: 0.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 112.1ms | GC: 0.0ms)
+Completed 200 OK in 122ms (Views: 115.9ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/career_photo" for ::1 at 2026-02-03 01:20:44 +0800
+Processing by Api::CareerPhotosController#create as */*
+  Parameters: {"image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg", "career" => "飛行員", "career_photo" => {"image_url" => "https://s3.hicloud.net.tw/3c-dr/test/%E5%AD%B8%E7%94%9F%E6%B8%AC%E8%A9%A6%E7%85%A7.jpg", "career" => "飛行員"}}
+Completed 200 OK in 136330ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/career_photo" for ::1 at 2026-02-03 01:25:20 +0800
+Processing by Api::CareerPhotosController#create as */*
+  Parameters: {"image_url" => "https://www.pcschool.com.tw/updimg/act/2017/%E8%A6%8B%E8%AD%89/%E5%BD%AD%E8%80%80%E9%9C%86/peng-yao-ting.jpg", "career" => "廚師", "career_photo" => {"image_url" => "https://www.pcschool.com.tw/updimg/act/2017/%E8%A6%8B%E8%AD%89/%E5%BD%AD%E8%80%80%E9%9C%86/peng-yao-ting.jpg", "career" => "廚師"}}
+Completed 200 OK in 145973ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/career_photo" for ::1 at 2026-02-03 01:34:17 +0800
+Processing by Api::CareerPhotosController#create as */*
+  Parameters: {"image_url" => "https://www.pcschool.com.tw/updimg/act/2017/%E8%A6%8B%E8%AD%89/%E5%BD%AD%E8%80%80%E9%9C%86/peng-yao-ting.jpg", "career" => "廚師", "career_photo" => {"image_url" => "https://www.pcschool.com.tw/updimg/act/2017/%E8%A6%8B%E8%AD%89/%E5%BD%AD%E8%80%80%E9%9C%86/peng-yao-ting.jpg", "career" => "廚師"}}
+Completed 200 OK in 145723ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/career_photo" for ::1 at 2026-02-03 01:40:16 +0800
+Processing by Api::CareerPhotosController#create as */*
+  Parameters: {"image_url" => "https://www.pcschool.com.tw/updimg/act/2017/%E8%A6%8B%E8%AD%89/%E5%BD%AD%E8%80%80%E9%9C%86/peng-yao-ting.jpg", "career" => "律師", "career_photo" => {"image_url" => "https://www.pcschool.com.tw/updimg/act/2017/%E8%A6%8B%E8%AD%89/%E5%BD%AD%E8%80%80%E9%9C%86/peng-yao-ting.jpg", "career" => "律師"}}
+Completed 200 OK in 154750ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.2ms)
+
+
+Started POST "/api/career_photo" for ::1 at 2026-02-03 01:47:33 +0800
+Processing by Api::CareerPhotosController#create as */*
+  Parameters: {"image_url" => "https://www.pcschool.com.tw/updimg/act/2017/%E8%A6%8B%E8%AD%89/%E5%BD%AD%E8%80%80%E9%9C%86/peng-yao-ting.jpg", "career" => "攝影師", "career_photo" => {"image_url" => "https://www.pcschool.com.tw/updimg/act/2017/%E8%A6%8B%E8%AD%89/%E5%BD%AD%E8%80%80%E9%9C%86/peng-yao-ting.jpg", "career" => "攝影師"}}
+Completed 200 OK in 155174ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+

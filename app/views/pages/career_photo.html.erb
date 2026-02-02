@@ -1,0 +1,233 @@
+<% content_for :title, "夢想職業照" %>
+
+<style>
+  .career-photo-page { max-width: 28rem; margin: 0 auto; padding: 2rem 1rem; font-family: ui-sans-serif, system-ui, sans-serif; }
+  .career-photo-page h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; color: #1a1a1a; }
+  .career-photo-page label { display: block; font-weight: 500; margin-bottom: 0.25rem; color: #374151; }
+  .career-photo-page input[type="text"], .career-photo-page select { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; font-size: 1rem; margin-bottom: 1rem; }
+  .career-photo-page input[type="file"] { width: 100%; margin-bottom: 1rem; font-size: 0.875rem; }
+  .career-photo-page .hint { font-size: 0.75rem; color: #6b7280; margin-top: -0.5rem; margin-bottom: 1rem; }
+  .career-photo-page button { width: 100%; padding: 0.75rem 1rem; background: #2563eb; color: white; border: none; border-radius: 0.375rem; font-size: 1rem; font-weight: 600; cursor: pointer; }
+  .career-photo-page button:hover { background: #1d4ed8; }
+  .career-photo-page button:disabled { background: #9ca3af; cursor: not-allowed; }
+  .career-photo-page .result { margin-top: 2rem; padding: 1rem; border-radius: 0.5rem; background: #f9fafb; }
+  .career-photo-page .result img { max-width: 100%; height: auto; border-radius: 0.375rem; display: block; margin-top: 0.5rem; }
+  .career-photo-page .result .error { color: #dc2626; }
+  .career-photo-page .result .loading { color: #6b7280; }
+  .career-photo-page .preview { max-width: 12rem; max-height: 12rem; object-fit: cover; border-radius: 0.375rem; margin-top: 0.5rem; border: 1px solid #e5e7eb; }
+  .career-photo-page .timer { font-size: 1.125rem; font-weight: 600; color: #1d4ed8; margin-bottom: 0.5rem; }
+  .career-photo-page .btn-download { display: inline-block; margin-top: 0.75rem; padding: 0.5rem 1rem; background: #059669; color: white; border-radius: 0.375rem; font-weight: 500; text-decoration: none; cursor: pointer; border: none; font-size: 0.875rem; }
+  .career-photo-page .btn-download:hover { background: #047857; }
+</style>
+
+<div class="career-photo-page">
+  <h1>夢想職業照</h1>
+  <p style="color:#6b7280; margin-bottom: 1.5rem;">上傳自拍照或貼上圖片網址，選擇職業，一鍵生成 25 歲擬真職業照。</p>
+
+  <form id="career-photo-form">
+    <div>
+      <label for="image_url">圖片網址（選填）</label>
+      <input type="text" id="image_url" name="image_url" placeholder="https://...">
+      <p class="hint">若有現成的人臉照片網址可貼在這裡。</p>
+    </div>
+
+    <div>
+      <label for="image_file">或上傳照片</label>
+      <input type="file" id="image_file" name="image_file" accept="image/*">
+      <p class="hint">上傳一張人臉清晰的自拍照。</p>
+      <img id="preview" class="preview" alt="" style="display: none;">
+    </div>
+
+    <div>
+      <label for="student_id">學生代號或姓名（選填，方便命名）</label>
+      <input type="text" id="student_id" name="student_id" placeholder="例如：A01、王小明">
+      <p class="hint">下載時檔名會包含此代號。</p>
+    </div>
+
+    <div>
+      <label for="career">選擇職業</label>
+      <select id="career" name="career" required>
+        <option value="">請選擇</option>
+        <option value="醫生">醫生</option>
+        <option value="老師">老師</option>
+        <option value="工程師">工程師</option>
+        <option value="廚師">廚師</option>
+        <option value="律師">律師</option>
+        <option value="設計師">設計師</option>
+        <option value="護理師">護理師</option>
+        <option value="飛行員">飛行員</option>
+        <option value="太空人">太空人</option>
+        <option value="作家">作家</option>
+        <option value="攝影師">攝影師</option>
+        <option value="音樂家">音樂家</option>
+      </select>
+    </div>
+
+    <button type="submit" id="submit-btn">生成職業照</button>
+  </form>
+
+  <div id="result" class="result" style="display: none;">
+    <div id="timer-display" class="timer" style="display: none;"></div>
+    <div id="result-content"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const form = document.getElementById("career-photo-form");
+  const imageUrlInput = document.getElementById("image_url");
+  const imageFileInput = document.getElementById("image_file");
+  const previewImg = document.getElementById("preview");
+  const careerSelect = document.getElementById("career");
+  const studentIdInput = document.getElementById("student_id");
+  const submitBtn = document.getElementById("submit-btn");
+  const resultEl = document.getElementById("result");
+  const resultContent = document.getElementById("result-content");
+  const timerDisplay = document.getElementById("timer-display");
+
+  let timerInterval = null;
+  let startTime = 0;
+
+  function formatTimeSeq(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const h = String(d.getHours()).padStart(2, "0");
+    const min = String(d.getMinutes()).padStart(2, "0");
+    const s = String(d.getSeconds()).padStart(2, "0");
+    return y + m + day + h + min + s;
+  }
+
+  function sanitizeFilename(s) {
+    if (!s || !s.trim()) return "未填";
+    return String(s).replace(/[\\/:*?"<>|]/g, "_").trim().slice(0, 50) || "未填";
+  }
+
+  function startTimer() {
+    startTime = Date.now();
+    timerDisplay.style.display = "block";
+    timerInterval = setInterval(function() {
+      const sec = Math.floor((Date.now() - startTime) / 1000);
+      timerDisplay.textContent = "已用時：" + sec + " 秒";
+    }, 1000);
+  }
+
+  function stopTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+  }
+
+  function escapeHtml(s) {
+    const div = document.createElement("div");
+    div.textContent = s;
+    return div.innerHTML;
+  }
+
+  // 預覽上傳的圖片
+  imageFileInput.addEventListener("change", function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      previewImg.src = url;
+      previewImg.style.display = "block";
+      imageUrlInput.value = "";
+    } else {
+      previewImg.style.display = "none";
+      previewImg.src = "";
+    }
+  });
+
+  imageUrlInput.addEventListener("input", function() {
+    if (imageUrlInput.value.trim()) {
+      imageFileInput.value = "";
+      previewImg.style.display = "none";
+      previewImg.src = "";
+    }
+  });
+
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    let imageUrl = imageUrlInput.value.trim();
+    const career = careerSelect.value.trim();
+    const studentId = studentIdInput.value.trim();
+    if (!career) {
+      resultContent.innerHTML = '<span class="error">請選擇職業。</span>';
+      resultEl.style.display = "block";
+      return;
+    }
+
+    // 若選了檔案，轉成 data URL
+    if (imageFileInput.files && imageFileInput.files[0]) {
+      const file = imageFileInput.files[0];
+      imageUrl = await new Promise(function(resolve) {
+        const r = new FileReader();
+        r.onload = function() { resolve(r.result); };
+        r.readAsDataURL(file);
+      });
+    }
+
+    if (!imageUrl) {
+      resultContent.innerHTML = '<span class="error">請貼上圖片網址或上傳一張照片。</span>';
+      resultEl.style.display = "block";
+      return;
+    }
+
+    submitBtn.disabled = true;
+    resultEl.style.display = "block";
+    timerDisplay.style.display = "none";
+    resultContent.innerHTML = '<span class="loading">先長大至約 30 歲，再生成職業照（約 90–150 秒），請稍候…</span>';
+    startTimer();
+
+    try {
+      const res = await fetch("/api/career_photo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image_url: imageUrl, career: career })
+      });
+      const data = await res.json();
+      const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
+      stopTimer();
+      timerDisplay.textContent = "總耗時：" + elapsedSec + " 秒";
+      timerDisplay.style.display = "block";
+
+      if (data.error) {
+        resultContent.innerHTML = '<span class="error">' + escapeHtml(data.error) + '</span>';
+        submitBtn.disabled = false;
+        return;
+      }
+      if (data.image_url) {
+        const timeSeq = formatTimeSeq(new Date());
+        const careerSafe = sanitizeFilename(career);
+        const studentSafe = sanitizeFilename(studentId);
+        const filename = timeSeq + "_" + careerSafe + "_" + studentSafe + ".jpg";
+        const downloadHtml = '<button type="button" class="btn-download" data-url="' + escapeHtml(data.image_url) + '" data-filename="' + escapeHtml(filename) + '">下載圖片</button>';
+        resultContent.innerHTML = '<p>生成完成（連結為暫時性，請盡快下載）：</p><a href="' + escapeHtml(data.image_url) + '" target="_blank" rel="noopener"><img src="' + escapeHtml(data.image_url) + '" alt="職業照"></a>' + downloadHtml;
+        resultContent.querySelector(".btn-download").addEventListener("click", function() {
+          const url = this.getAttribute("data-url");
+          const fn = this.getAttribute("data-filename");
+          fetch(url, { mode: "cors" }).then(function(r) { return r.blob(); }).then(function(blob) {
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = fn;
+            a.click();
+            URL.revokeObjectURL(a.href);
+          }).catch(function() {
+            window.open(url, "_blank");
+          });
+        });
+      } else {
+        resultContent.innerHTML = '<span class="error">未取得圖片網址。</span>';
+      }
+    } catch (err) {
+      stopTimer();
+      timerDisplay.style.display = "none";
+      resultContent.innerHTML = '<span class="error">請求失敗：' + escapeHtml(err.message) + '</span>';
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+})();
+</script>

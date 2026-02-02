@@ -10,6 +10,8 @@
 | [04-NEXT-ACTIONS.md](04-NEXT-ACTIONS.md) | 下一步行動與前置條件（如 API 金鑰） | 開工前檢查、交接、維運手冊 |
 | [05-API-KEYS-INJECTION.md](05-API-KEYS-INJECTION.md) | API 金鑰注入方式（credentials / 環境變數） | 本機與 GCP 設定金鑰時引用 |
 | [06-GIT-GOVERNANCE.md](06-GIT-GOVERNANCE.md) | Git 治理規範（不得提交 .env／金鑰、commit 前提醒） | 提交前自檢、新成員約定 |
+| [07-LINE-AND-FACE-SCENARIO.md](07-LINE-AND-FACE-SCENARIO.md) | 自拍＋職業擬真情境、25 歲擬真圖、LINE 官方帳號串接 | LINE @ 串接、InstantID、Webhook |
+| [08-STEP-BY-STEP-GUIDE.md](08-STEP-BY-STEP-GUIDE.md) | 一步一步操作（Make + LINE ＋ API） | 從本機測試到端對端 |
 
 ---
 
