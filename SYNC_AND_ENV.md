@@ -2,19 +2,30 @@
 
 ## 一、與 GitHub 同步狀態
 
-**目前狀態：尚未同步完成**
+**目前狀態：** 請在本機執行 `git status` 查看；若顯示 "Your branch is up to date with 'origin/main'" 且 "nothing to commit"，即表示已與 GitHub 同步完成。
 
-- 本地分支 `main` **領先** `origin/main` **1 個 commit**。
-- 尚未推送的 commit：`6c30c90` — "Allow Cloud Run host, exclude /up for health check"（修正 GCP Blocked hosts 的設定）。
-
-**請在本機執行：**
+**若有未推送的 commit**（顯示 "Your branch is ahead of 'origin/main' by N commit(s)"），請在本機執行：
 
 ```powershell
 cd c:\github\dream_career_gen
 git push origin main
 ```
 
-推送成功後，GitHub 上就會有最新的 `production.rb` 設定，GCP 再重新部署後就不會再出現 Blocked hosts 錯誤。
+---
+
+## 一之一、同步錯誤時可以怎麼做
+
+若在 Cursor 或用指令做 push / sync 時出現錯誤，可依序嘗試：
+
+| 步驟 | 你做什麼 |
+|------|----------|
+| 1. 用終端機再試一次 | 在 Cursor 開終端機（Ctrl+`），執行 `cd c:\github\dream_career_gen` 後再執行 `git push origin main`，看終端機顯示的錯誤訊息。 |
+| 2. 確認有先 commit | 若有改過檔案，先執行 `git add .`、`git commit -m "你的訊息"`，再執行 `git push origin main`。 |
+| 3. 檢查網路與 GitHub | 確認能連上網、能開 github.com；若公司有 proxy，需設定 Git 的 proxy 或改用 SSH。 |
+| 4. 檢查登入方式 | **HTTPS：** 密碼需用 GitHub 的 **Personal Access Token (PAT)**，不能用帳號密碼。**SSH：** 若已設 SSH key，可改遠端為 `git remote set-url origin git@github.com:SLChinwen/dream_career_gen.git` 再 push。 |
+| 5. 確認沒有鎖檔 | 關掉其他會用 Git 的程式（其他 IDE、Git GUI），刪除專案內 `.git/index.lock`（若存在），再重試 push。 |
+
+**記下錯誤訊息：** 終端機或 Cursor 顯示的英文錯誤（例如 `Permission denied`、`Failed to connect`）有助於進一步排查。
 
 ---
 
