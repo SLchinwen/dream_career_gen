@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+# Rails production 需要 SECRET_KEY_BASE，若未設定則自動產生
+if [ -z "$SECRET_KEY_BASE" ]; then
+  export SECRET_KEY_BASE=$(bundle exec rails secret)
+fi
+# 確保 storage 目錄存在（SQLite 資料庫路徑）
+mkdir -p storage
+# 建立資料庫（primary、cache、queue、cable）
+bundle exec rails db:prepare
+exec bundle exec rails server -b 0.0.0.0

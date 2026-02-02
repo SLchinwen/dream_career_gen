@@ -45,6 +45,7 @@ git push origin main
    |----------|-----|------|
    | `GEMINI_API_KEY` | 你的 Google Gemini API Key | **必填**，主產品需此金鑰 |
    | `RAILS_ENV` | `production` | 建議設定 |
+   | `SECRET_KEY_BASE` | （選填）執行 `rails secret` 產生 | 若未設，容器啟動時會自動產生，建議正式環境自行設定 |
 
 7. 若有使用進階版（Replicate），可加 `REPLICATE_API_TOKEN`
 8. 點擊 **「部署」**
@@ -103,7 +104,8 @@ https://dream-career-service-225291605101.asia-east1.run.app
 
 - 專案已改為使用 Cloud Run 預設 port **8080**
 - 請勿在 Cloud Run 環境變數中設定 `PORT=3000`（若有請刪除）
-- 重新 push 程式碼並觸發建置，讓新 Dockerfile 生效
+- 確認已 push 最新程式碼（含 `bin/docker-start`、Dockerfile 修正）並觸發建置
+- 若仍失敗：至 Cloud Logging 查看該修訂版本日誌，檢查是否有資料庫或金鑰錯誤
 
 ### 志工開啟網址出現 Blocked hosts
 

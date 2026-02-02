@@ -1,12 +1,12 @@
 # 使用官方 Ruby 輕量版映像檔 (與您的本機版本對應)
 FROM ruby:3.2.2-slim
 
-# 安裝必要的 Linux 套件 (Rails 需要這些才能運作)
+# 安裝必要的 Linux 套件
 # build-essential: 編譯工具
-# libpq-dev: 資料庫連線工具 (雖用 SQLite 但保留擴充性)
-# git: 下載 Gem 用
-# curl: 網路工具
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev git curl
+# libpq-dev: 資料庫連線 (擴充性)
+# libsqlite3-dev: SQLite 原生擴充
+# git, curl: 網路工具
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev libsqlite3-dev git curl
 
 # 設定工作目錄 (在容器內的位置)
 WORKDIR /rails
@@ -24,8 +24,9 @@ COPY . .
 ENV RAILS_ENV=production
 RUN bundle exec rails assets:precompile 2>/dev/null || true
 
-# Cloud Run 預設使用 PORT=8080，puma 會讀取 ENV["PORT"]
-EXPOSE 8080
+# 5. 啟動腳本：先 db:prepare 再啟動 Rails
+COPY bin/docker-start /rails/bin/docker-start
+RUN chmod +x /rails/bin/docker-start
 
-# 啟動 Rails 伺服器（綁定 0.0.0.0，監聽 $PORT）
-CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
+EXPOSE 8080
+CMD ["/rails/bin/docker-start"]

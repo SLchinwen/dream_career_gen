@@ -18,6 +18,8 @@ steps:
       - '--allow-unauthenticated'
       - '--port'
       - '8080'
+      - '--memory'
+      - '1Gi'
       - '--cpu-boost'
 images:
   - 'asia-east1-docker.pkg.dev/green-miracle-dream/dream-repo/dream-app:$COMMIT_SHA'
