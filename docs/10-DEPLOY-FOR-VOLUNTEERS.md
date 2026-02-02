@@ -99,6 +99,12 @@ https://dream-career-service-225291605101.asia-east1.run.app
 
 ## 常見問題
 
+### 部署失敗：container failed to start and listen on PORT
+
+- 專案已改為使用 Cloud Run 預設 port **8080**
+- 請勿在 Cloud Run 環境變數中設定 `PORT=3000`（若有請刪除）
+- 重新 push 程式碼並觸發建置，讓新 Dockerfile 生效
+
 ### 志工開啟網址出現 Blocked hosts
 
 - 確認 `config/environments/production.rb` 中的 `config.hosts` 包含 Cloud Run 網址

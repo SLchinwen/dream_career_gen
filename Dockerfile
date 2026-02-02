@@ -20,8 +20,12 @@ RUN bundle install
 # 3. 複製剩下的所有程式碼
 COPY . .
 
-# 暴露 Port 3000
-EXPOSE 3000
+# 4. Production 模式資產預編譯
+ENV RAILS_ENV=production
+RUN bundle exec rails assets:precompile 2>/dev/null || true
 
-# 啟動 Rails 伺服器 (綁定 0.0.0.0 讓外部可連線)
-CMD ["rails", "server", "-b", "0.0.0.0"]
+# Cloud Run 預設使用 PORT=8080，puma 會讀取 ENV["PORT"]
+EXPOSE 8080
+
+# 啟動 Rails 伺服器（綁定 0.0.0.0，監聽 $PORT）
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

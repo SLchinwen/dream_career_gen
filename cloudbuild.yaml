@@ -17,7 +17,8 @@ steps:
       - 'managed'
       - '--allow-unauthenticated'
       - '--port'
-      - '3000'
+      - '8080'
+      - '--cpu-boost'
 images:
   - 'asia-east1-docker.pkg.dev/green-miracle-dream/dream-repo/dream-app:$COMMIT_SHA'
 options:
