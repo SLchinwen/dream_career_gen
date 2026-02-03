@@ -4,6 +4,58 @@
 
 ---
 
+## 快速取得：公開網址與 API 金鑰／呼叫方式
+
+### 公開 Web 連結（給投稿人使用）
+
+部署完成後，在 **GCP Console → Cloud Run → 選取服務 `dream-career-service`**，複製上方的 **「服務網址」**（例如 `https://dream-career-service-123456789.asia-east1.run.app`）。
+
+**投稿人使用的頁面網址：**
+
+```
+https://<您的服務網址>/rotary/photo_score
+```
+
+- 將 `<您的服務網址>` 替換成上一步複製的網址即可（不要加結尾斜線）。
+- 此頁不需登入、不需 API Key，投稿人可上傳相片／貼網址＋填寫說明，取得評語與改善建議。
+
+---
+
+### API 金鑰（KEY）如何取得與設定
+
+| 項目 | 說明 |
+|------|------|
+| **金鑰名稱** | `ROTARY_API_KEY` |
+| **誰用** | 排程系統／工程師呼叫評分 API 時使用；**不**給投稿人。 |
+| **如何產生** | 自訂一組長隨機字串即可，例如：<br>• 指令：`openssl rand -hex 32`<br>• 或使用密碼產生器產生 32 字元以上 |
+| **在哪設定** | **GCP Console → Cloud Run → dream-career-service → 編輯與部署新修訂版本 → 變數與密碼**，新增變數名稱 `ROTARY_API_KEY`，值貼上您產生的金鑰。 |
+| **如何交給工程師** | 以**安全管道**（例如密碼管理工具、加密通道）將「金鑰字串」提供給負責排程的工程師；勿寫在公開文件或程式碼裡。 |
+
+---
+
+### API 呼叫方法（給工程師）
+
+| 項目 | 內容 |
+|------|------|
+| **網址** | `POST https://<您的服務網址>/api/rotary/photo_scores` |
+| **認證** | Header 二擇一：<br>• `Authorization: Bearer <ROTARY_API_KEY>`<br>• 或 `X-API-Key: <ROTARY_API_KEY>` |
+| **Body** | `multipart/form-data`：<br>• `photo`（檔案）**或** `image_url`（字串）擇一<br>• `description`（必填，約 100 字）<br>• `submission_id`（選填） |
+| **成功回傳** | JSON：`score`、`score_max`、`summary`、`consistency`、`composition_tip`、`description_tip`、`submission_id` |
+
+**curl 範例：**
+
+```bash
+curl -X POST "https://<您的服務網址>/api/rotary/photo_scores" \
+  -H "Authorization: Bearer 您的ROTARY_API_KEY" \
+  -F "photo=@/path/to/image.jpg" \
+  -F "description=我們透過扶輪完成了..." \
+  -F "submission_id=sub_001"
+```
+
+更多範例（Python、錯誤碼、排程建議）見下方「二、評分 API 串接辦法」。
+
+---
+
 ## 一、部署到雲端（GCP Cloud Run）
 
 ### 1.1 前置條件
