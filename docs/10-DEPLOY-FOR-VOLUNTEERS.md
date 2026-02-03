@@ -118,6 +118,12 @@ https://dream-career-service-225291605101.asia-east1.run.app
 - 至 Cloud Run → 變數與密碼，確認 `GEMINI_API_KEY` 已正確設定
 - 重新部署新修訂
 
+### 429 配額／Resource exhausted
+
+- 程式會自動重試最多 3 次（延遲 5、10、20 秒）
+- 若仍失敗：前往 [GCP API 配額](https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/quotas)、[Google AI Studio](https://aistudio.google.com/) 檢查用量
+- 考慮啟用計費或等待免費額度重置
+
 ### API 金鑰曾出現在日誌或截圖中
 
 - **請立即至 [Google AI Studio](https://aistudio.google.com/apikey) 撤銷該金鑰並產生新的**

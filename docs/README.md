@@ -14,6 +14,7 @@
 | [08-STEP-BY-STEP-GUIDE.md](08-STEP-BY-STEP-GUIDE.md) | 一步一步操作（Web ＋ Make + LINE ＋ API） | 從本機測試到端對端 |
 | [09-PRODUCT-SERVICE-STEPS.md](09-PRODUCT-SERVICE-STEPS.md) | 產品服務步驟定義（年齡變化→Prompt→職業照） | 功能驗收、API 規格、本機測試、流程對齊 |
 | [10-DEPLOY-FOR-VOLUNTEERS.md](10-DEPLOY-FOR-VOLUNTEERS.md) | 發布給志工使用（GCP Cloud Run） | 部署、環境變數、志工網址 |
+| [11-COST-ESTIMATE.md](11-COST-ESTIMATE.md) | 每張夢想職人照成本估算（Gemini + Cloud Run） | 預算、用量評估 |
 
 ---
 

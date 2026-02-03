@@ -179,6 +179,9 @@ class GeminiCareerFastService
     raise ApiError, "Gemini Imagen 未回傳圖片"
   end
 
+  MAX_RETRIES = 3
+  RETRY_DELAY_BASE = 5  # 秒
+
   def call_gemini(uri, key, body, read_timeout: 30)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
@@ -190,12 +193,23 @@ class GeminiCareerFastService
     req["x-goog-api-key"] = key
     req.body = body.to_json
 
-    res = http.request(req)
+    retries = 0
+    loop do
+      res = http.request(req)
 
-    unless res.is_a?(Net::HTTPSuccess)
+      if res.is_a?(Net::HTTPSuccess)
+        return JSON.parse(res.body)
+      end
+
+      # 429 配額／速率限制：指數退避重試
+      if res.code.to_i == 429 && retries < MAX_RETRIES
+        delay = RETRY_DELAY_BASE * (2**retries)
+        retries += 1
+        sleep(delay)
+        next
+      end
+
       raise ApiError, "Gemini API 錯誤: #{res.code} - #{res.body[0, 500]}"
     end
-
-    JSON.parse(res.body)
   end
 end
