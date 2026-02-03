@@ -1,0 +1,24 @@
+---
+description: 專案標準：專案開始時由 AI 引導補足 from-client-to-dev 標準文件，後續開發對齊需求
+alwaysApply: true
+---
+
+# 專案標準
+
+本專案採用**從客戶到交付開發**的軟體工程文件標準，完整說明見 **docs/16-PROJECT-STANDARD.md**。
+
+## 專案開始時
+
+- **由 AI 負責引導**使用者提供資料，並依**階段依賴**補足 `docs/from-client-to-dev/` 之 00～10 標準文件。
+- **啟動方式**：使用者說「專案開始」「依專案標準補足文件」「引導我從頭建立專案文件」「依專案標準引導我提供資料」時，即啟動引導流程。
+- **引導流程**：從 00 客戶背景開始，依序 00 → 01 → 02 → 03 & 04 → 05 → 06 → 07（可選）→ 08 → 09 → 10；每階段說明要產出的文件、提問或請使用者提供敘述、將內容寫入對應 .md、未提供處標「待補」、提醒下一步並詢問是否繼續。
+- **迭代**：使用者說「補足某一份」或「我改了 XX」時，依依賴關係協助更新或補足對應文件。
+
+## 後續開發
+
+- AI 開發時對齊 `docs/from-client-to-dev/` 之 03、05、06、08、10 及 **docs/15-AI-DEV-STANDARDS.md**（需求追溯、驗收對照、用語一致）；Rule「ai-dev-alignment」於編輯程式碼時套用。
+
+## 標準文件清單
+
+- 總覽：`docs/from-client-to-dev/README.md`
+- 文件：`docs/from-client-to-dev/00-CLIENT-BACKGROUND.md`～`10-HANDOVER-CHECKLIST.md`

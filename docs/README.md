@@ -15,6 +15,11 @@
 | [09-PRODUCT-SERVICE-STEPS.md](09-PRODUCT-SERVICE-STEPS.md) | 產品服務步驟定義（年齡變化→Prompt→職業照） | 功能驗收、API 規格、本機測試、流程對齊 |
 | [10-DEPLOY-FOR-VOLUNTEERS.md](10-DEPLOY-FOR-VOLUNTEERS.md) | 發布給志工使用（GCP Cloud Run） | 部署、環境變數、志工網址 |
 | [11-COST-ESTIMATE.md](11-COST-ESTIMATE.md) | 每張夢想職人照成本估算（Gemini + Cloud Run） | 預算、用量評估 |
+| [14-SCAFFOLD-NEW-PROJECT.md](14-SCAFFOLD-NEW-PROJECT.md) | 新專案治理 scaffold（複製治理模式、腳本與 AI 用法） | 開新專案時建立相同 .cursor 與 docs 結構 |
+| [from-client-to-dev/README.md](from-client-to-dev/README.md) | 從客戶到交付開發：軟體工程文件總覽（00～10 標準範本、階段依賴、AI 引導） | 客戶背景→需求→目的→估價→交付開發、分階段建立與迭代修正 |
+| [15-AI-DEV-STANDARDS.md](15-AI-DEV-STANDARDS.md) | AI 開發軟工標準文件清單與互動標準（開發前／實作時／完成時／變更時對齊需求） | AI 開發時參照文件、對齊需求、追溯與驗收 |
+| [16-PROJECT-STANDARD.md](16-PROJECT-STANDARD.md) | 專案標準：從客戶到交付開發、專案開始時由 AI 引導補足文件、階段依賴 | 專案開始、依專案標準引導、後續開發對齊 |
+| [17-PRODUCTIVITY-AND-QUALITY.md](17-PRODUCTIVITY-AND-QUALITY.md) | 生產力與品質：注意事項、提交前檢查、建議設定（測試、lint、文件同步） | 提交前自檢、本地品質把關、與需求對齊 |
 
 ---
 

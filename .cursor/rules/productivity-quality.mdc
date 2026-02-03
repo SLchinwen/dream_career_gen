@@ -1,0 +1,24 @@
+---
+description: 提交前與日常開發的生產力與品質提醒（金鑰、測試、lint、文件同步）
+globs: app/**/*, lib/**/*, test/**/*
+alwaysApply: false
+---
+
+# 生產力與品質提醒
+
+編輯程式碼或測試時，可一併注意下列事項；完整清單見 **docs/17-PRODUCTIVITY-AND-QUALITY.md**。
+
+## 提交前建議
+
+- **勿提交金鑰**：待提交清單不得含 `.env`、`config/master.key`；見 docs/06-GIT-GOVERNANCE.md。
+- **建議先跑測試與 Lint**：改動程式後，提交前可執行 `ruby bin/rails test`、`ruby bin/rubocop`（Windows），減少 CI 失敗。
+- **需求對應**：若本次改動對應某項需求（如 03-F01），commit 訊息可標註，便於追溯。
+
+## 測試與文件
+
+- 撰寫或補測試時，可對齊 03／06 的**驗收條件**；測試可註明對應需求編號。
+- 需求或範圍變更時，依依賴關係同步更新 03、05、06、08、09、10 等文件。
+
+## 引用
+
+- 完整注意事項與建議設定：docs/17-PRODUCTIVITY-AND-QUALITY.md
