@@ -12,4 +12,9 @@ module ApiKeys
   def self.gemini_api_key
     ENV.fetch("GEMINI_API_KEY") { Rails.application.credentials.dig(:gemini, :api_key) }
   end
+
+  # People of Action 評分 API（排程用）：呼叫時需在 header 帶入此 Key
+  def self.rotary_api_key
+    ENV.fetch("ROTARY_API_KEY") { Rails.application.credentials.dig(:rotary, :api_key) }
+  end
 end

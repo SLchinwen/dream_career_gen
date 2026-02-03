@@ -1,0 +1,246 @@
+<% content_for :title, "People of Action 投稿自評" %>
+
+<style>
+  .rotary-score-page { max-width: 32rem; margin: 0 auto; padding: 2rem 1rem; font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif; }
+  .rotary-score-page h1 { font-size: 1.5rem; font-weight: 700; color: #0f766e; margin-bottom: 0.25rem; }
+  .rotary-score-page .subtitle { font-size: 0.9375rem; color: #64748b; margin-bottom: 1.5rem; }
+  .rotary-score-page label { display: block; font-weight: 600; margin-bottom: 0.375rem; color: #334155; font-size: 0.9375rem; }
+  .rotary-score-page input[type="url"], .rotary-score-page input[type="text"] { width: 100%; padding: 0.625rem 0.75rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; margin-bottom: 0.25rem; }
+  .rotary-score-page input[type="file"] { width: 100%; padding: 0.5rem; border: 2px dashed #94a3b8; border-radius: 0.5rem; background: #f8fafc; font-size: 0.875rem; margin-bottom: 0.25rem; }
+  .rotary-score-page input[type="file"]:hover { border-color: #059669; background: #f0fdf4; }
+  .rotary-score-page input:focus { outline: none; border-color: #059669; }
+  .rotary-score-page .or-divider { text-align: center; margin: 0.5rem 0; font-size: 0.875rem; color: #64748b; }
+  .rotary-score-page textarea { width: 100%; padding: 0.625rem 0.75rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; min-height: 5rem; margin-bottom: 0.25rem; resize: vertical; }
+  .rotary-score-page textarea:focus { outline: none; border-color: #059669; }
+  .rotary-score-page .hint { font-size: 0.75rem; color: #64748b; margin-top: -0.25rem; margin-bottom: 1rem; }
+  .rotary-score-page button[type="submit"] { width: 100%; padding: 0.875rem 1.25rem; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; cursor: pointer; }
+  .rotary-score-page button[type="submit"]:hover { background: linear-gradient(135deg, #047857 0%, #065f46 100%); }
+  .rotary-score-page button[type="submit"]:disabled { background: #94a3b8; cursor: not-allowed; }
+  .rotary-score-page .error { padding: 1rem; border-radius: 0.5rem; background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; margin-bottom: 1rem; }
+  .rotary-score-page .result { padding: 1.25rem; border-radius: 0.75rem; background: #f0fdf4; border: 2px solid #86efac; margin-top: 1.5rem; }
+  .rotary-score-page .result h2 { font-size: 1.125rem; color: #047857; margin-bottom: 0.75rem; }
+  .rotary-score-page .result .result-image { max-width: 100%; max-height: 240px; object-fit: contain; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #a7f3d0; }
+  .rotary-score-page .result .summary { color: #065f46; line-height: 1.6; margin-bottom: 0.5rem; }
+  .rotary-score-page .result .consistency { font-size: 0.875rem; color: #047857; margin-bottom: 0.75rem; }
+  .rotary-score-page .result .tips { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #a7f3d0; }
+  .rotary-score-page .result .tips h4 { font-size: 0.9375rem; color: #047857; margin-bottom: 0.375rem; }
+  .rotary-score-page .result .tips p { font-size: 0.875rem; color: #065f46; line-height: 1.5; margin-bottom: 0.75rem; }
+  .rotary-score-page .result .tips p:last-child { margin-bottom: 0; }
+  .rotary-score-page .progress { margin-top: 1.5rem; padding: 1.25rem; border-radius: 0.75rem; background: #f0f9ff; border: 2px solid #7dd3fc; display: none; }
+  .rotary-score-page .progress.visible { display: block; }
+  .rotary-score-page .progress h3 { font-size: 1rem; color: #0369a1; margin-bottom: 0.75rem; }
+  .rotary-score-page .progress .step { margin-bottom: 0.5rem; font-size: 0.9375rem; color: #0c4a6e; }
+  .rotary-score-page .progress .step.done { color: #047857; }
+  .rotary-score-page .progress .step.active { font-weight: 600; }
+  .rotary-score-page .progress .timer { font-size: 1.25rem; font-weight: 700; color: #0369a1; margin-top: 0.75rem; }
+</style>
+
+<div class="rotary-score-page">
+  <h1>People of Action 投稿自評</h1>
+  <p class="subtitle">輸入相片網址或上傳相片，加上約 100 字服務說明，取得 AI 評語與改善建議（僅供參考，不取代正式評審）。</p>
+
+  <div id="error-box" class="error" style="<%= @error ? '' : 'display: none;' %>"><%= @error %></div>
+
+  <%= form_with url: rotary_photo_score_path, method: :post, local: true, id: "rotary-score-form", multipart: true do |f| %>
+    <div>
+      <label for="image_url">相片網址</label>
+      <input type="url" id="image_url" name="image_url" placeholder="https://...（可略，改由上傳）" value="<%= params[:image_url] || @image_url %>">
+      <p class="hint">貼上圖片的直接連結（須可公開讀取）。若相片在 Facebook 等無法直連，請改用下方上傳。</p>
+    </div>
+    <p class="or-divider">— 或 —</p>
+    <div>
+      <label for="photo">上傳相片</label>
+      <input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/gif,image/webp">
+      <p class="hint">FB、IG 等連結若無法讀取，請直接上傳圖片檔（JPG / PNG / GIF / WebP）。</p>
+    </div>
+    <div>
+      <label for="description">服務說明（約 100 字）</label>
+      <textarea id="description" name="description" maxlength="500" placeholder="請描述本張相片中的服務行動、對象與影響..." required><%= params[:description] || @description %></textarea>
+      <p class="hint">約 100 字。送出後會先讀取圖片，再取得 AI 評語與建議（約 30–90 秒），請勿關閉頁面。</p>
+    </div>
+    <button type="submit" id="submit-btn">取得評語與建議</button>
+  <% end %>
+
+  <div id="progress-box" class="progress" aria-live="polite">
+    <h3>處理中</h3>
+    <div id="step1" class="step">步驟 1：正在讀取圖片…</div>
+    <div id="step2" class="step">步驟 2：正在取得 AI 評語與建議…</div>
+    <div id="timer" class="timer">已等待 0 秒</div>
+  </div>
+
+  <div id="result-box" class="result" role="region" aria-label="評語與建議" style="<%= @result ? '' : 'display: none;' %>">
+    <% if @result %>
+      <h2>評語與改善建議</h2>
+      <% if @image_url.present? %>
+        <p class="hint">以下為您輸入的相片，請確認無誤：</p>
+        <img src="<%= ERB::Util.html_escape(@image_url) %>" alt="投稿相片" class="result-image" loading="lazy" onerror="this.style.display='none'">
+      <% elsif @result %>
+        <p class="hint">（已上傳相片）</p>
+      <% end %>
+      <div class="summary"><strong>評語：</strong><%= @result[:summary] %></div>
+      <div class="consistency">圖片與說明一致性：<%= @result[:consistency] %></div>
+      <% if @result[:composition_tip].present? || @result[:description_tip].present? %>
+        <div class="tips">
+          <h4>改善建議（供下次投稿參考）</h4>
+          <% if @result[:composition_tip].present? %>
+            <p><strong>取景／構圖：</strong><%= @result[:composition_tip] %></p>
+          <% end %>
+          <% if @result[:description_tip].present? %>
+            <p><strong>說明文字：</strong><%= @result[:description_tip] %></p>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<script>
+(function() {
+  var form = document.getElementById('rotary-score-form');
+  var submitBtn = document.getElementById('submit-btn');
+  var progressBox = document.getElementById('progress-box');
+  var resultBox = document.getElementById('result-box');
+  var errorBox = document.getElementById('error-box');
+  var step1 = document.getElementById('step1');
+  var step2 = document.getElementById('step2');
+  var timerEl = document.getElementById('timer');
+  var checkPath = '<%= rotary_photo_score_check_path %>';
+  var scorePath = '<%= rotary_photo_score_path %>';
+  var csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+  var timerInterval = null;
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = 'block';
+    resultBox.style.display = 'none';
+  }
+  function hideError() { errorBox.style.display = 'none'; }
+  function showResult(html) {
+    errorBox.style.display = 'none';
+    resultBox.innerHTML = html;
+    resultBox.style.display = 'block';
+  }
+  function setStep(id, text, done) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text;
+    el.classList.toggle('done', !!done);
+    el.classList.toggle('active', !done && text.indexOf('…') > -1);
+  }
+  function startTimer() {
+    var sec = 0;
+    timerInterval = setInterval(function() {
+      sec++;
+      if (timerEl) timerEl.textContent = '已等待 ' + sec + ' 秒';
+    }, 1000);
+  }
+  function stopTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  }
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var imageUrl = document.getElementById('image_url').value.trim();
+    var photoFile = document.getElementById('photo').files[0];
+    var description = document.getElementById('description').value.trim();
+
+    if (!description) { showError('請填寫服務說明'); return; }
+    if (!imageUrl && !photoFile) { showError('請填寫相片網址或上傳相片（二擇一）'); return; }
+
+    hideError();
+    resultBox.style.display = 'none';
+    progressBox.classList.add('visible');
+    submitBtn.disabled = true;
+    if (timerEl) timerEl.textContent = '已等待 0 秒';
+    stopTimer();
+
+    var useUpload = !!photoFile;
+
+    function doScoreRequest(scoreFormData) {
+      setStep('step2', '步驟 2：正在取得 AI 評語與建議…', false);
+      startTimer();
+      return fetch(scorePath, {
+        method: 'POST',
+        body: scoreFormData,
+        headers: { 'X-CSRF-Token': csrfToken, 'Accept': 'application/json' }
+      });
+    }
+
+    var promise;
+    if (useUpload) {
+      setStep('step1', '步驟 1：使用上傳圖片', true);
+      setStep('step2', '步驟 2：正在取得 AI 評語與建議…', false);
+      var scoreForm = new FormData();
+      scoreForm.append('photo', photoFile);
+      scoreForm.append('description', description);
+      scoreForm.append('authenticity_token', csrfToken);
+      promise = doScoreRequest(scoreForm);
+    } else {
+      setStep('step1', '步驟 1：正在讀取圖片…', false);
+      setStep('step2', '步驟 2：等待中', false);
+      var checkForm = new FormData();
+      checkForm.append('image_url', imageUrl);
+      checkForm.append('authenticity_token', csrfToken);
+      promise = fetch(checkPath, {
+        method: 'POST',
+        body: checkForm,
+        headers: { 'X-CSRF-Token': csrfToken }
+      })
+      .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, data: data }; }); })
+      .then(function(result) {
+        if (!result.ok) throw new Error(result.data.error || '無法讀取圖片');
+        setStep('step1', '步驟 1：讀取圖片完成', true);
+        var scoreForm = new FormData();
+        scoreForm.append('image_url', imageUrl);
+        scoreForm.append('description', description);
+        scoreForm.append('authenticity_token', csrfToken);
+        return doScoreRequest(scoreForm);
+      });
+    }
+
+    promise
+    .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, status: r.status, data: data }; }); })
+    .then(function(result) {
+      stopTimer();
+      progressBox.classList.remove('visible');
+      submitBtn.disabled = false;
+      setStep('step2', '步驟 2：完成', true);
+
+      if (!result.ok) {
+        showError(result.data.error || '取得失敗，請稍後再試');
+        return;
+      }
+      var d = result.data;
+      var imgHtml = '';
+      if (useUpload && photoFile) {
+        var previewUrl = URL.createObjectURL(photoFile);
+        imgHtml = '<p class="hint">您上傳的相片：</p><img src="' + previewUrl + '" alt="投稿相片" class="result-image">';
+      } else if (imageUrl) {
+        imgHtml = '<p class="hint">以下為您輸入的相片，請確認無誤：</p><img src="' + imageUrl.replace(/"/g, '&quot;') + '" alt="投稿相片" class="result-image" loading="lazy" onerror="this.style.display=\'none\'">';
+      }
+      var tipsHtml = '';
+      if (d.composition_tip || d.description_tip) {
+        tipsHtml = '<div class="tips"><h4>改善建議（供下次投稿參考）</h4>';
+        if (d.composition_tip) tipsHtml += '<p><strong>取景／構圖：</strong>' + (d.composition_tip || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>';
+        if (d.description_tip) tipsHtml += '<p><strong>說明文字：</strong>' + (d.description_tip || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>';
+        tipsHtml += '</div>';
+      }
+      showResult(
+        '<h2>評語與改善建議</h2>' + imgHtml +
+        '<div class="summary"><strong>評語：</strong>' + (d.summary || '—') + '</div>' +
+        '<div class="consistency">圖片與說明一致性：' + (d.consistency || '—') + '</div>' +
+        tipsHtml
+      );
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    })
+    .catch(function(err) {
+      stopTimer();
+      progressBox.classList.remove('visible');
+      submitBtn.disabled = false;
+      setStep('step1', useUpload ? '步驟 1：使用上傳圖片' : '步驟 1：讀取圖片失敗', false);
+      setStep('step2', '步驟 2：未執行', false);
+      showError(err.message || '發生錯誤，請稍後再試');
+    });
+  });
+})();
+</script>

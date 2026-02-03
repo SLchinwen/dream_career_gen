@@ -40,4 +40,5 @@
 * **測試：** `bin/rails test`  
 * **部署：** 見 [cloudbuild.yaml](cloudbuild.yaml)、[SYNC_AND_ENV.md](SYNC_AND_ENV.md)  
 * **發布給志工：** 見 [docs/10-DEPLOY-FOR-VOLUNTEERS.md](docs/10-DEPLOY-FOR-VOLUNTEERS.md)  
+* **People of Action 評分 API 部署與排程串接：** 見 [docs/13-DEPLOY-AND-ROTARY-API.md](docs/13-DEPLOY-AND-ROTARY-API.md)  
 * **產品服務步驟：** 見 [docs/09-PRODUCT-SERVICE-STEPS.md](docs/09-PRODUCT-SERVICE-STEPS.md)
