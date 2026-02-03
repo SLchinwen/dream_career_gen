@@ -104,8 +104,9 @@ https://dream-career-service-225291605101.asia-east1.run.app
 
 - 專案已改為使用 Cloud Run 預設 port **8080**
 - 請勿在 Cloud Run 環境變數中設定 `PORT=3000`（若有請刪除）
-- 確認已 push 最新程式碼（含 `bin/docker-start`、Dockerfile 修正）並觸發建置
-- 若仍失敗：至 Cloud Logging 查看該修訂版本日誌，檢查是否有資料庫或金鑰錯誤
+- 已設定 startup probe：首次檢查延遲 120 秒，讓 Rails 有時間啟動
+- 確認透過 **git push → Cloud Build** 部署（勿只從 Cloud Console 點「部署」重複使用舊映像）
+- 若仍失敗：至 Cloud Logging 查看該修訂版本日誌
 
 ### 志工開啟網址出現 Blocked hosts
 
@@ -116,6 +117,11 @@ https://dream-career-service-225291605101.asia-east1.run.app
 
 - 至 Cloud Run → 變數與密碼，確認 `GEMINI_API_KEY` 已正確設定
 - 重新部署新修訂
+
+### API 金鑰曾出現在日誌或截圖中
+
+- **請立即至 [Google AI Studio](https://aistudio.google.com/apikey) 撤銷該金鑰並產生新的**
+- 在 Cloud Run 變數與密碼中更新為新金鑰後重新部署
 
 ### 部署後仍是舊版頁面
 

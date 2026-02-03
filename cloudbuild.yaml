@@ -21,6 +21,8 @@ steps:
       - '--memory'
       - '1Gi'
       - '--cpu-boost'
+      - '--startup-probe'
+      - 'httpGet.path=/up,httpGet.port=8080,initialDelaySeconds=120,failureThreshold=12,timeoutSeconds=5,periodSeconds=10'
 images:
   - 'asia-east1-docker.pkg.dev/green-miracle-dream/dream-repo/dream-app:$COMMIT_SHA'
 options:
