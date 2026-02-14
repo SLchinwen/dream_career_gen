@@ -131,6 +131,24 @@
 
 實作位置：`app/services/rid3510/`（IntentDetector、KnowledgeService、ReplyService）、`app/controllers/api/rid3510/reply_controller.rb`。意圖規則對照 rid3510 專案 `bot/main.py` 的 `get_intent`。
 
+### Rid3510 知識庫有更新時如何部署（不會自動）
+
+子模組 **rid3510** 在 GitHub 有新的 commit 時，雲端**不會自動**更新；需在主專案 dream_career_gen 裡「更新子模組指標」並 push，才會觸發新建置並帶上最新知識庫。
+
+**步驟（在 dream_career_gen 專案目錄）：**
+
+```powershell
+# 1. 拉取 Rid3510 遠端最新並更新子模組指標
+git submodule update --remote rid3510
+
+# 2. 提交並推送（會觸發 Cloud Build 部署）
+git add rid3510
+git commit -m "更新 Rid3510 知識庫"
+git push origin main
+```
+
+建置完成後，Cloud Run 上的 stage1/reply 與 /rid3510/chat 即會使用最新知識庫內容。
+
 ---
 
 ## 六、相關文件索引

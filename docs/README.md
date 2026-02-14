@@ -21,6 +21,8 @@
 | [16-PROJECT-STANDARD.md](16-PROJECT-STANDARD.md) | 專案標準：從客戶到交付開發、專案開始時由 AI 引導補足文件、階段依賴 | 專案開始、依專案標準引導、後續開發對齊 |
 | [17-PRODUCTIVITY-AND-QUALITY.md](17-PRODUCTIVITY-AND-QUALITY.md) | 生產力與品質：注意事項、提交前檢查、建議設定（測試、lint、文件同步） | 提交前自檢、本地品質把關、與需求對齊 |
 | [18-SIMPLE-CHAT-SERVICE.md](18-SIMPLE-CHAT-SERVICE.md) | 簡單聊天服務索引與環境參考（雲端網址、Gemini API、與現有服務共用環境、供 AI 建置） | 新增聊天服務、金鑰與部署參考、可複製給 AI 的環境摘要 |
+| [19-驗證與重新部署步驟.md](19-驗證與重新部署步驟.md) | 改過程式後重新部署、驗證 API 與「目前總監／這屆」日期對齊 | 重新部署、stage1/reply 驗證、日期對齊檢查 |
+| [20-子模組已加好-建立API並部署.md](20-子模組已加好-建立API並部署.md) | 子模組 rid3510 加好後，建立 stage1/reply API 與部署步驟（含日期對齊） | 建置指引、給 AI 的一句話指令 |
 
 ---
 

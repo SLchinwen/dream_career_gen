@@ -30,11 +30,28 @@ module Rid3510
 
     private
 
+    # 依系統日期推算當前扶輪年度（7/1～隔年 6/30）
+    # 例如 2026 年 2 月 → 2025-26；2026 年 8 月 → 2026-27
+    def current_rotary_year
+      today = Date.current
+      if today.month >= 7
+        "#{today.year}-#{(today.year + 1) % 100}"
+      else
+        "#{today.year - 1}-#{today.year % 100}"
+      end
+    end
+
+    def date_context_line
+      today = Date.current
+      year_str = current_rotary_year
+      "【系統日期】今日為 #{today.year}年#{today.month}月#{today.day}日。當前扶輪年度為 #{year_str}。使用者問「目前總監」「這屆總監」「今年」時請依此年度回答。"
+    end
+
     def ask_gemini(user_message, context)
       key = ApiKeys.gemini_api_key
       raise MissingApiKey, "GEMINI_API_KEY 未設定（請檢查 .env 或 credentials）" if key.blank?
 
-      user_content = "【知識庫內容】\n#{context[0, 8000]}\n\n【使用者問題】\n#{user_message}"
+      user_content = "#{date_context_line}\n\n【知識庫內容】\n#{context[0, 8000]}\n\n【使用者問題】\n#{user_message}"
       full_prompt = "#{SYSTEM_PROMPT}\n\n---\n\n#{user_content}"
 
       body = {
