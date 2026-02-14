@@ -134,6 +134,31 @@ https://dream-career-service-225291605101.asia-east1.run.app
 - 清除瀏覽器快取後重新整理
 - 確認 Cloud Build 建置完成、Cloud Run 已換成新 revision
 
+### 建置失敗：Failed to clone 'rid3510'（could not read Username for 'https://github.com'）
+
+子模組 **rid3510** 為**私人 GitHub repo** 時，Cloud Build 需要 GitHub 憑證才能 clone。請依下列步驟設定：
+
+1. **建立 GitHub Personal Access Token**
+   - 開啟 [GitHub → Settings → Developer settings → Personal access tokens](https://github.com/settings/tokens)
+   - 產生新 token（Classic），勾選權限 **repo**（可讀私人 repo）
+   - 複製產生的 token（只顯示一次，請妥善保存）
+
+2. **在 GCP Secret Manager 建立 secret**
+   - 開啟 [Secret Manager](https://console.cloud.google.com/security/secret-manager)（專案 green-miracle-dream）
+   - 點「建立密碼」→ 名稱填 **GH_TOKEN** → 密碼值貼上剛才的 GitHub token → 建立
+
+3. **授權 Cloud Build 讀取該 secret**
+   - 到 [IAM 與管理員 → IAM](https://console.cloud.google.com/iam-admin/iam)
+   - 找到 **Cloud Build 服務帳戶**（通常為 `專案編號@cloudbuild.gserviceaccount.com`）
+   - 編輯該帳戶 → 新增角色 **Secret Manager 密碼存取者**（Secret Manager Secret Accessor）
+   - 若需限定只給某個 secret，可在 Secret Manager 中對該 secret 的「權限」新增上述服務帳戶為「密碼存取者」
+
+4. **確認 cloudbuild.yaml**
+   - 專案中 `cloudbuild.yaml` 已設定使用 `projects/green-miracle-dream/secrets/GH_TOKEN/versions/latest`
+   - 若您的 GCP 專案 ID 不同，請修改 `cloudbuild.yaml` 裡的 `projects/您的專案ID/secrets/GH_TOKEN/versions/latest`
+
+完成後重新 push 或手動觸發建置即可。
+
 ---
 
 ## 相關文件

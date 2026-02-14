@@ -1,7 +1,17 @@
+# 若 rid3510 為私人 repo，請在 Secret Manager 建立 GitHub token（見下方說明），
+# 並將下方 availableSecrets 的 secret 名稱改為您建立的 secret。
 steps:
-  # 初始化 Git 子模組（rid3510 知識庫），供 RID3510 stage1/reply API 讀取
+  # 初始化 Git 子模組（rid3510 知識庫）；私人 repo 需 GH_TOKEN
   - name: 'gcr.io/cloud-builders/git'
-    args: ['submodule', 'update', '--init', '--recursive']
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if [ -n "$$GH_TOKEN" ]; then
+          git config --global url."https://x-access-token:$$GH_TOKEN@github.com/".insteadOf "https://github.com/"
+        fi
+        git submodule update --init --recursive
+    secretEnv: ['GH_TOKEN']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'asia-east1-docker.pkg.dev/green-miracle-dream/dream-repo/dream-app:$COMMIT_SHA', '.']
   - name: 'gcr.io/cloud-builders/docker'
@@ -28,5 +38,9 @@ steps:
       - 'httpGet.path=/up,httpGet.port=8080,initialDelaySeconds=120,failureThreshold=12,timeoutSeconds=5,periodSeconds=10'
 images:
   - 'asia-east1-docker.pkg.dev/green-miracle-dream/dream-repo/dream-app:$COMMIT_SHA'
+availableSecrets:
+  secretManager:
+    - versionName: projects/green-miracle-dream/secrets/GH_TOKEN/versions/latest
+      env: 'GH_TOKEN'
 options:
   logging: CLOUD_LOGGING_ONLY
