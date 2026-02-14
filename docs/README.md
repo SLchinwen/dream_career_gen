@@ -20,6 +20,7 @@
 | [15-AI-DEV-STANDARDS.md](15-AI-DEV-STANDARDS.md) | AI 開發軟工標準文件清單與互動標準（開發前／實作時／完成時／變更時對齊需求） | AI 開發時參照文件、對齊需求、追溯與驗收 |
 | [16-PROJECT-STANDARD.md](16-PROJECT-STANDARD.md) | 專案標準：從客戶到交付開發、專案開始時由 AI 引導補足文件、階段依賴 | 專案開始、依專案標準引導、後續開發對齊 |
 | [17-PRODUCTIVITY-AND-QUALITY.md](17-PRODUCTIVITY-AND-QUALITY.md) | 生產力與品質：注意事項、提交前檢查、建議設定（測試、lint、文件同步） | 提交前自檢、本地品質把關、與需求對齊 |
+| [18-SIMPLE-CHAT-SERVICE.md](18-SIMPLE-CHAT-SERVICE.md) | 簡單聊天服務索引與環境參考（雲端網址、Gemini API、與現有服務共用環境、供 AI 建置） | 新增聊天服務、金鑰與部署參考、可複製給 AI 的環境摘要 |
 
 ---
 
