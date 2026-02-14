@@ -115,7 +115,25 @@
 
 ---
 
-## 五、相關文件索引
+## 五、RID3510 階段 1 回覆 API（已建置）
+
+在專案中已實作 **RID3510 階段 1 回覆 API**，從子模組 **rid3510** 讀取知識庫（`rag-intent-paths.yaml` 與 `docs/*.md`），經意圖辨識後呼叫 Gemini 回覆。
+
+| 項目 | 說明 |
+|------|------|
+| **路徑** | `POST /stage1/reply` 或 `POST /api/rid3510/reply`（與 Make / LINE 串接相容） |
+| **Body** | `{ "message": "使用者輸入" }` |
+| **回傳** | `{ "reply": "回覆文字", "intent": "意圖" }` |
+| **知識庫** | 子模組 `rid3510/`（`rag-intent-paths.yaml`、`docs/`）；部署時需確保 submodule 已 checkout |
+| **意圖** | 工作目標、現有活動、E化操作、扶輪知識、基金與獎助金、3510歷史、fallback |
+| **金鑰** | 沿用 `GEMINI_API_KEY`、`ApiKeys.gemini_api_key` |
+| **模擬網頁** | `GET /rid3510/chat` — 聊天介面，可直接在瀏覽器測試送出問題與回覆 |
+
+實作位置：`app/services/rid3510/`（IntentDetector、KnowledgeService、ReplyService）、`app/controllers/api/rid3510/reply_controller.rb`。意圖規則對照 rid3510 專案 `bot/main.py` 的 `get_intent`。
+
+---
+
+## 六、相關文件索引
 
 | 文件 | 說明 |
 |------|------|
@@ -124,7 +142,8 @@
 | [10-DEPLOY-FOR-VOLUNTEERS.md](10-DEPLOY-FOR-VOLUNTEERS.md) | 發布流程、Cloud Run 環境變數、取得雲端網址 |
 | `config/initializers/api_keys.rb` | ApiKeys.gemini_api_key 讀取邏輯 |
 | `app/services/gemini_service.rb` | 既有 Gemini 呼叫範例（generateContent、x-goog-api-key） |
-| `config/routes.rb` | 現有路由，新增聊天路徑時請勿覆蓋 |
+| `config/routes.rb` | 現有路由，含 stage1/reply、api/rid3510/reply |
+| rid3510 子模組 | `rid3510/rag-intent-paths.yaml`、`rid3510/docs/`、`rid3510/docs/聊天機器人知識庫指引.md` |
 
 ---
 

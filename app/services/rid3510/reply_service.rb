@@ -1,0 +1,75 @@
+# frozen_string_literal: true
+
+require "net/http"
+require "json"
+
+# RID3510 階段 1 回覆：意圖辨識 → 知識庫 context → Gemini → { reply, intent }。
+# 使用子模組 rid3510 的 YAML 與 docs，金鑰沿用 ApiKeys.gemini_api_key。
+module Rid3510
+  class ReplyService
+    BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
+    MODEL = "gemini-2.0-flash"
+    SYSTEM_PROMPT = "你是國際扶輪 3510 地區的知識庫助理。請根據以下「知識庫內容」簡潔回答使用者的問題。若資料中無答案，請說明並建議聯繫地區 e 化主委或地區辦事處。回答請用繁體中文。"
+
+    class Error < StandardError; end
+    class MissingApiKey < Error; end
+    class ApiError < Error; end
+
+    # @param message [String] 使用者輸入
+    # @return [Hash] { reply: String, intent: String }
+    def self.call(message)
+      new.call(message)
+    end
+
+    def call(message)
+      intent = IntentDetector.detect(message)
+      context = KnowledgeService.new.context_for_intent(intent, max_chars: 6000)
+      reply = ask_gemini(message, context)
+      { reply: reply, intent: intent }
+    end
+
+    private
+
+    def ask_gemini(user_message, context)
+      key = ApiKeys.gemini_api_key
+      raise MissingApiKey, "GEMINI_API_KEY 未設定（請檢查 .env 或 credentials）" if key.blank?
+
+      user_content = "【知識庫內容】\n#{context[0, 8000]}\n\n【使用者問題】\n#{user_message}"
+      full_prompt = "#{SYSTEM_PROMPT}\n\n---\n\n#{user_content}"
+
+      body = {
+        contents: [{ parts: [{ text: full_prompt }] }],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 1024,
+          responseMimeType: "text/plain"
+        }
+      }
+
+      uri = URI("#{BASE_URL}/models/#{MODEL}:generateContent")
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.open_timeout = 10
+      http.read_timeout = 60
+
+      req = Net::HTTP::Post.new(uri)
+      req["Content-Type"] = "application/json"
+      req["x-goog-api-key"] = key
+      req.body = body.to_json
+
+      res = http.request(req)
+
+      unless res.is_a?(Net::HTTPSuccess)
+        raise ApiError, "Gemini API 錯誤: #{res.code} #{res.message} - #{res.body[0, 500]}"
+      end
+
+      data = JSON.parse(res.body)
+      text = data.dig("candidates", 0, "content", "parts", 0, "text")
+      raise ApiError, "Gemini 未回傳文字" if text.blank?
+
+      text.strip
+    rescue MissingApiKey, ApiError => e
+      "查詢時發生錯誤，請稍後再試或聯繫地區 e 化主委。（#{e.message[0, 100]}）"
+    end
+  end
+end

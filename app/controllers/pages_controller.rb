@@ -68,6 +68,11 @@ class PagesController < ApplicationController
     return render_json_error(500) if request.format.json?
   end
 
+  # RID3510 聊天機器人模擬頁（供直接測試 stage1/reply API）
+  def rid3510_chat
+    # 僅渲染聊天介面，實際呼叫由前端 POST /stage1/reply
+  end
+
   # 僅檢查圖片網址是否可讀取（供前端步驟 1 顯示）
   def rotary_photo_score_check
     image_url = params[:image_url].to_s.strip

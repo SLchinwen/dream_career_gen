@@ -1,4 +1,7 @@
 steps:
+  # 初始化 Git 子模組（rid3510 知識庫），供 RID3510 stage1/reply API 讀取
+  - name: 'gcr.io/cloud-builders/git'
+    args: ['submodule', 'update', '--init', '--recursive']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'asia-east1-docker.pkg.dev/green-miracle-dream/dream-repo/dream-app:$COMMIT_SHA', '.']
   - name: 'gcr.io/cloud-builders/docker'

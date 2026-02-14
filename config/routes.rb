@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   get "career_photo_fast" => "pages#career_photo_fast", as: :career_photo_fast_page
   get "career_photo" => "pages#career_photo", as: :career_photo_page
 
+  # RID3510 聊天機器人模擬（測試 stage1/reply）
+  get "rid3510/chat" => "pages#rid3510_chat", as: :rid3510_chat_page
+
   # People of Action 投稿自評（Web：上傳相片＋說明 → 分數與評語）
   get "rotary/photo_score" => "pages#rotary_photo_score", as: :rotary_photo_score
   post "rotary/photo_score" => "pages#rotary_photo_score"
@@ -28,5 +31,13 @@ Rails.application.routes.draw do
     namespace :rotary do
       resources :photo_scores, only: [:create]
     end
+
+    # RID3510 階段 1 回覆 API（意圖＋知識庫＋Gemini，從子模組 rid3510 讀取）
+    namespace :rid3510 do
+      post "reply" => "reply#create"
+    end
   end
+
+  # 與 Make / LINE 串接同一路徑（對應 rid3510 bot stage1/reply）
+  post "stage1/reply" => "api/rid3510/reply#create"
 end
