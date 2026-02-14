@@ -1,0 +1,3 @@
+[submodule "rid3510"]
+	path = rid3510
+	url = https://github.com/SLchinwen/Rid3510.git
