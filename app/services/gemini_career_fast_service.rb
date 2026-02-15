@@ -4,8 +4,8 @@ require "net/http"
 require "json"
 require "base64"
 
-# 方案 B：純 Gemini 流程（Vision 讀臉部特徵 → Imagen 產圖）
-# 不依賴 Replicate，速度較快（約 10–30 秒），相似度較低
+# 純 Gemini 流程（Vision 描述臉部「30 歲成人版」→ Imagen 產圖）
+# 不依賴 Replicate、不需「先長大」；直接以原圖讓 Vision 描述成人特徵，再以文字 prompt 讓 Imagen 生成。速度較快（約 10–30 秒），相似度較低。
 class GeminiCareerFastService
   BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
   MODEL_VISION = "gemini-2.0-flash"

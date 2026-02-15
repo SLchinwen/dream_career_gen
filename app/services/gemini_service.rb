@@ -22,9 +22,10 @@ class GeminiService
     new(dream: dream, gender: gender, age: age).prompt_for_image
   end
 
-  # 25 歲擬真職業照用 Prompt（給 InstantID 等擬真模型）
+  # Replicate 版專用：擬真職業照 Prompt（給 InstantID 用）。
+  # 流程為「先 SAM 長大 → 再 InstantID」，故傳入 InstantID 的參考圖已是約 30 歲成人，不需在 prompt 再強調「長大」。
   # @param career [String] 希望職業，例如「醫生」「太空人」
-  # @return [String] 英文擬真繪圖用 Prompt（固定 25 歲、photorealistic）
+  # @return [String] 英文擬真繪圖用 Prompt（同一人、職業服裝與情境、photorealistic）
   def self.prompt_for_photorealistic_career(career:)
     new(dream: career.to_s.strip, gender: nil, age: "25").prompt_for_photorealistic_career
   end
@@ -115,11 +116,11 @@ class GeminiService
     <<~PROMPT.strip
       你是一位為「擬真職業照」撰寫 image generation prompt 的專家。請根據以下職業，產出「一段」英文的 prompt，給擬真人像模型（InstantID）使用。
 
-      重要：這是「同一人長大後」的職業照。參考圖可能是孩童或青少年，你必須強烈強調「約 30 歲成人模樣」。
+      重要：參考圖「已經是」同一人約 30 歲成人的臉（流程中已先做年齡變化）。你只需描述：保留同一人身份、穿著該職業服裝、在該職業典型情境中、擬真攝影風格。
       要求：
       - 只輸出「一段」英文描述，不要編號、不要分點、不要標題。
-      - 開頭務必寫：aged to 30 years old, mature adult, same person grown up, adult face with defined jawline, mature skin texture, no baby fat。接著描述：亞洲人、穿著該職業服裝、在該職業典型情境中。
-      - 務必寫入：30 years old, adult proportions, professional portrait。風格：photorealistic, professional photo, high quality portrait。絕對不要出現 child、kid、teen、young、baby。
+      - 開頭寫：same person, keep identity, 30 years old adult。接著描述：穿著該職業服裝、在該職業工作情境、亞洲人、professional portrait。風格：photorealistic, professional photo, high quality portrait。
+      - 不要寫 aged to 30、grown up、no baby fat（參考圖已是成人）。不要出現 child、kid、teen、baby。
       - 長度約 1～3 句，用逗號分隔。不要輸出任何中文或說明，只輸出這一段英文。
 
       希望職業：#{@dream}
