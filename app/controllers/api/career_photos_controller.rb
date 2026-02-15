@@ -21,6 +21,11 @@ module Api
       if career.blank?
         return render json: { error: "career 為必填" }, status: :unprocessable_entity
       end
+      if image_url.start_with?("data:")
+        return render json: {
+          error: "Replicate 版不支援「上傳照片」產生的 data URL，易導致 InstantID 失敗。請改選「使用圖片網址」並貼上可公開存取的 https 圖片連結（例如先上傳至 Imgur 取得連結）。"
+        }, status: :unprocessable_entity
+      end
 
       # 第一階段：SAM 年齡變化，把臉長大至約 30 歲（失敗則用原圖）
       face_url = image_url
@@ -39,7 +44,7 @@ module Api
     rescue GeminiService::ApiError, InstantIdService::ApiError, InstantIdService::PredictionFailed => e
       err_msg = e.message
       if err_msg.to_s.include?("list index out of range")
-        err_msg = "#{err_msg} 建議：請改選「使用圖片網址」、貼上可公開存取的 https 圖片連結（人臉清晰正面），或改用快版（純 Gemini）。"
+        err_msg = "InstantID 無法處理此圖片（list index out of range）。請務必改選「使用圖片網址」、貼上「可直接在瀏覽器新分頁開啟的」https 圖片連結，且照片需單一人臉、清晰正面；或改用快版（純 Gemini）。"
       end
       render json: { error: err_msg }, status: :unprocessable_entity
     end
