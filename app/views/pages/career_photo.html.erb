@@ -318,7 +318,11 @@
       timerDisplay.style.display = "block";
 
       if (data.error) {
-        resultContent.innerHTML = '<span class="error">' + escapeHtml(data.error) + '</span>';
+        let errHtml = '<span class="error">' + escapeHtml(data.error) + '</span>';
+        if (data.error.indexOf('list index out of range') !== -1) {
+          errHtml += '<p class="hint" style="margin-top:0.75rem;">請改選「使用圖片網址」並貼上可直接開啟的 https 圖片連結（不需登入），或改用上方「快版（純 Gemini）」。</p>';
+        }
+        resultContent.innerHTML = errHtml;
         submitBtn.disabled = false;
         return;
       }

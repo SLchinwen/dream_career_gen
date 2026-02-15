@@ -37,7 +37,11 @@ module Api
     rescue GeminiService::MissingApiKey, InstantIdService::MissingApiKey, AgeProgressionService::MissingApiKey => e
       render json: { error: "API 金鑰未設定：#{e.message}" }, status: :service_unavailable
     rescue GeminiService::ApiError, InstantIdService::ApiError, InstantIdService::PredictionFailed => e
-      render json: { error: e.message }, status: :unprocessable_entity
+      err_msg = e.message
+      if err_msg.to_s.include?("list index out of range")
+        err_msg = "#{err_msg} 建議：請改選「使用圖片網址」、貼上可公開存取的 https 圖片連結（人臉清晰正面），或改用快版（純 Gemini）。"
+      end
+      render json: { error: err_msg }, status: :unprocessable_entity
     end
 
     private
