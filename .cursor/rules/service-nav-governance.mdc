@@ -1,0 +1,14 @@
+---
+description: 新增對外網頁或 API 時需同步更新服務導覽
+globs: config/routes.rb, config/service_nav.yml
+alwaysApply: false
+---
+
+# 服務導覽治理
+
+編輯 **config/routes.rb** 新增對外網頁或 API 路徑時，請一併更新 **config/service_nav.yml**，將新服務加入導覽列表，以便首頁「服務與 API 導覽」可列出並連結。
+
+- **網頁**：在 `pages` 新增一筆 `name`、`path`、`description`。
+- **API**：在 `apis` 新增一筆 `name`、`path`、`method`、`description`。
+
+完整步驟與檢查清單見 **docs/21-服務導覽與發布治理.md**。

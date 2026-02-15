@@ -9,8 +9,11 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # 夢想職人照（產品主頁）
-  root "pages#career_photo_fast"
+  # 服務與 API 導覽（首頁）；同機多服務時由此進入各網頁與 API
+  root "pages#index"
+  get "nav" => "pages#index", as: :service_nav_page
+
+  # 夢想職人照
   get "career_photo_fast" => "pages#career_photo_fast", as: :career_photo_fast_page
   get "career_photo" => "pages#career_photo", as: :career_photo_page
 

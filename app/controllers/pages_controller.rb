@@ -2,6 +2,13 @@
 
 # 網頁版：上傳／貼圖＋選擇職業 → 呼叫 API 生成職業照
 class PagesController < ApplicationController
+  # 服務與 API 導覽頁（同機多服務時由此進入各網頁與 API 說明）
+  def index
+    path = Rails.root.join("config", "service_nav.yml")
+    raw = path.file? ? YAML.load_file(path) : nil
+    @nav = { "meta" => {}, "pages" => [], "apis" => [] }.merge(raw.is_a?(Hash) ? raw : {})
+  end
+
   def career_photo
     # 僅渲染表單頁，實際呼叫 API 由前端 JavaScript 發送 POST /api/career_photo
   end

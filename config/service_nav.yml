@@ -1,0 +1,42 @@
+# 服務導覽設定：同機多服務時於此列出網頁與 API，供首頁導覽使用。
+# 發布新服務時請依 docs/21-服務導覽與發布治理.md 新增一筆並部署。
+
+meta:
+  title: 服務與 API 導覽
+  description: 本機／同一伺服器上已發布的網頁服務與 API 列表，供測試與對外說明。
+
+pages:
+  - name: 夢想職人照（快版）
+    path: /career_photo_fast
+    description: 上傳自拍與選擇職業，以 Gemini 快速產生職業照。
+  - name: 夢想職人照
+    path: /career_photo
+    description: 上傳自拍與選擇職業，產生職業照（完整流程）。
+  - name: RID3510 聊天
+    path: /rid3510/chat
+    description: 3510 區聊天機器人模擬頁，可測試 stage1/reply API。
+  - name: People of Action 投稿自評
+    path: /rotary/photo_score
+    description: 上傳相片與服務說明，取得 People of Action 自評分數與評語。
+
+apis:
+  - name: 職業照生成（快版）
+    path: /api/career_photo_fast
+    method: POST
+    description: 自拍＋職業 → 職業照（Gemini 快版）。
+  - name: 職業照生成
+    path: /api/career_photo
+    method: POST
+    description: 自拍＋職業 → 職業照（完整流程）。
+  - name: stage1/reply（RID3510）
+    path: /stage1/reply
+    method: POST
+    description: RID3510 階段 1 回覆 API，意圖＋知識庫＋Gemini；與 Make / LINE 同一路徑。
+  - name: RID3510 回覆（API 路徑）
+    path: /api/rid3510/reply
+    method: POST
+    description: 同上，namespace 路徑。
+  - name: People of Action 評分
+    path: /api/rotary/photo_scores
+    method: POST
+    description: 評分 API（排程用，需 ROTARY_API_KEY）。
