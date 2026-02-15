@@ -3,59 +3,82 @@
 <style>
   .service-nav-page { max-width: 42rem; margin: 0 auto; padding: 2rem 1rem; font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif; }
   .service-nav-page h1 { font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; }
-  .service-nav-page .subtitle { font-size: 0.9375rem; color: #475569; margin-bottom: 2rem; }
-  .service-nav-page section { margin-bottom: 2rem; }
-  .service-nav-page section h2 { font-size: 1.125rem; font-weight: 600; color: #334155; margin-bottom: 0.75rem; padding-bottom: 0.375rem; border-bottom: 2px solid #e2e8f0; }
-  .service-nav-page .card { display: block; padding: 1rem 1.25rem; margin-bottom: 0.75rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; background: #fff; text-decoration: none; color: inherit; transition: border-color 0.15s, box-shadow 0.15s; }
+  .service-nav-page .summary { font-size: 1rem; color: #065f46; background: #ecfdf5; border-left: 4px solid #059669; padding: 0.75rem 1rem; margin-bottom: 1.5rem; border-radius: 0 0.5rem 0.5rem 0; line-height: 1.5; }
+  .service-nav-page .subtitle { font-size: 0.9375rem; color: #475569; margin-bottom: 1.5rem; }
+  .service-nav-page section { margin-bottom: 0.5rem; }
+  .service-nav-page details { border: 1px solid #e2e8f0; border-radius: 0.5rem; margin-bottom: 0.75rem; background: #fff; }
+  .service-nav-page details[open] { border-color: #0ea5e9; }
+  .service-nav-page summary { padding: 0.75rem 1rem; font-size: 1.125rem; font-weight: 600; color: #334155; cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; }
+  .service-nav-page summary::-webkit-details-marker { display: none; }
+  .service-nav-page summary::after { content: "▼"; font-size: 0.75rem; color: #64748b; transition: transform 0.2s; }
+  .service-nav-page details[open] summary::after { transform: rotate(-180deg); }
+  .service-nav-page .details-inner { padding: 0 1rem 1rem; }
+  .service-nav-page .card { display: block; padding: 1rem 1.25rem; margin-bottom: 0.75rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; background: #f8fafc; text-decoration: none; color: inherit; transition: border-color 0.15s, box-shadow 0.15s; }
+  .service-nav-page .card:last-child { margin-bottom: 0; }
   .service-nav-page .card:hover { border-color: #0ea5e9; box-shadow: 0 2px 8px rgba(14, 165, 233, 0.15); }
   .service-nav-page .card .name { font-weight: 600; color: #0f172a; margin-bottom: 0.25rem; }
   .service-nav-page .card .path { font-size: 0.8125rem; font-family: ui-monospace, monospace; color: #64748b; margin-bottom: 0.375rem; }
   .service-nav-page .card .desc { font-size: 0.875rem; color: #475569; line-height: 1.5; }
+  .service-nav-page .card .updated { font-size: 0.75rem; color: #94a3b8; margin-top: 0.375rem; }
+  .service-nav-page .card.api { background: #f8fafc; }
   .service-nav-page .card.api .path { color: #0369a1; }
   .service-nav-page .card .method { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 0.25rem; background: #e0f2fe; color: #0369a1; margin-right: 0.5rem; }
-  .service-nav-page .page-footer { margin-top: 2rem; padding-top: 1rem; text-align: center; font-size: 0.8125rem; color: #64748b; }
+  .service-nav-page .page-footer { margin-top: 2rem; padding-top: 1rem; text-align: center; font-size: 0.875rem; color: #475569; }
+  .service-nav-page .page-footer .provider { font-weight: 600; color: #065f46; margin-bottom: 0.25rem; }
   .service-nav-page .page-footer a { color: #0ea5e9; text-decoration: none; }
   .service-nav-page .page-footer a:hover { text-decoration: underline; }
 </style>
 
 <div class="service-nav-page">
   <h1><%= @nav.dig("meta", "title").presence || "服務與 API 導覽" %></h1>
-  <p class="subtitle"><%= @nav.dig("meta", "description").presence || "本機／同一伺服器上已發布的網頁服務與 API，供測試與說明。" %></p>
+  <p class="summary"><%= @nav.dig("meta", "summary").presence || "綠色奇蹟提供 AI 相關服務，協助志工與民眾正確取得服務使用。" %></p>
+  <p class="subtitle"><%= @nav.dig("meta", "description").presence || "本機／同一伺服器上已發布的網頁服務與 API，供測試與說明。點選區塊可展開或收合。" %></p>
 
   <section>
-    <h2>網頁服務</h2>
-    <% (@nav["pages"] || []).each do |item| %>
-      <% item = item.is_a?(Hash) ? item : {} %>
-      <a href="<%= item["path"].to_s %>" class="card">
-        <div class="name"><%= item["name"].presence || item["path"] %></div>
-        <div class="path"><%= item["path"].to_s %></div>
-        <div class="desc"><%= item["description"].to_s %></div>
-      </a>
-    <% end %>
-    <% if (@nav["pages"] || []).empty? %>
-      <p style="font-size: 0.875rem; color: #64748b;">尚無網頁服務。請依 docs/21 在 config/service_nav.yml 新增。</p>
-    <% end %>
-  </section>
-
-  <section>
-    <h2>API</h2>
-    <% (@nav["apis"] || []).each do |item| %>
-      <% item = item.is_a?(Hash) ? item : {} %>
-      <div class="card api">
-        <div class="name">
-          <% if item["method"].present? %><span class="method"><%= item["method"] %></span><% end %>
-          <%= item["name"].presence || item["path"] %>
-        </div>
-        <div class="path"><%= item["path"].to_s %></div>
-        <div class="desc"><%= item["description"].to_s %></div>
+    <details open>
+      <summary>網頁服務</summary>
+      <div class="details-inner">
+        <% (@nav["pages"] || []).each do |item| %>
+          <% item = item.is_a?(Hash) ? item : {} %>
+          <a href="<%= item["path"].to_s %>" class="card">
+            <div class="name"><%= item["name"].presence || item["path"] %></div>
+            <div class="path"><%= item["path"].to_s %></div>
+            <div class="desc"><%= item["description"].to_s %></div>
+            <% if item["updated_at"].present? %><div class="updated">更新：<%= item["updated_at"].to_s %></div><% end %>
+          </a>
+        <% end %>
+        <% if (@nav["pages"] || []).empty? %>
+          <p style="font-size: 0.875rem; color: #64748b;">尚無網頁服務。請依 docs/21 在 config/service_nav.yml 新增。</p>
+        <% end %>
       </div>
-    <% end %>
-    <% if (@nav["apis"] || []).empty? %>
-      <p style="font-size: 0.875rem; color: #64748b;">尚無 API 項目。請依 docs/21 在 config/service_nav.yml 新增。</p>
-    <% end %>
+    </details>
   </section>
 
-  <p class="page-footer">
-    發布新服務時請依專案 <strong>docs/21-服務導覽與發布治理.md</strong> 編輯 config/service_nav.yml 並部署。
-  </p>
+  <section>
+    <details open>
+      <summary>API</summary>
+      <div class="details-inner">
+        <% (@nav["apis"] || []).each do |item| %>
+          <% item = item.is_a?(Hash) ? item : {} %>
+          <div class="card api">
+            <div class="name">
+              <% if item["method"].present? %><span class="method"><%= item["method"] %></span><% end %>
+              <%= item["name"].presence || item["path"] %>
+            </div>
+            <div class="path"><%= item["path"].to_s %></div>
+            <div class="desc"><%= item["description"].to_s %></div>
+            <% if item["updated_at"].present? %><div class="updated">更新：<%= item["updated_at"].to_s %></div><% end %>
+          </div>
+        <% end %>
+        <% if (@nav["apis"] || []).empty? %>
+          <p style="font-size: 0.875rem; color: #64748b;">尚無 API 項目。請依 docs/21 在 config/service_nav.yml 新增。</p>
+        <% end %>
+      </div>
+    </details>
+  </section>
+
+  <footer class="page-footer">
+    <p class="provider">綠色奇蹟公益服務網提供</p>
+    <p>發布新服務時請依專案 <strong>docs/21-服務導覽與發布治理.md</strong> 編輯 config/service_nav.yml（可填 updated_at）並部署。</p>
+  </footer>
 </div>

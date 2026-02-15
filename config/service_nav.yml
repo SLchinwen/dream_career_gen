@@ -1,42 +1,52 @@
 # 服務導覽設定：同機多服務時於此列出網頁與 API，供首頁導覽使用。
-# 發布新服務時請依 docs/21-服務導覽與發布治理.md 新增一筆並部署。
+# 發布新服務時請依 docs/21-服務導覽與發布治理.md 新增一筆；更新項目時可填 updated_at（選填，格式 YYYY-MM-DD 或 YYYY-MM-DD HH:MM）。
 
 meta:
   title: 服務與 API 導覽
   description: 本機／同一伺服器上已發布的網頁服務與 API 列表，供測試與對外說明。
+  summary: 綠色奇蹟提供 AI 相關服務，協助志工與民眾正確取得服務使用。
 
 pages:
   - name: 夢想職人照（快版／純 Gemini）
     path: /career_photo_fast
     description: 上傳自拍與選擇職業，以 Gemini 產生職業照。需 GEMINI_API_KEY。兩版網頁操作相同，僅 AI 不同。
+    updated_at: "2026-02-04"
   - name: 夢想職人照（Replicate 版）
     path: /career_photo
     description: 同上操作，以 Replicate（SAM+InstantID）生成，相似度較高。需 REPLICATE_API_TOKEN。
+    updated_at: "2026-02-04"
   - name: RID3510 聊天
     path: /rid3510/chat
     description: 3510 區聊天機器人模擬頁，可測試 stage1/reply API。
+    updated_at: "2026-02-04"
   - name: People of Action 投稿自評
     path: /rotary/photo_score
     description: 上傳相片與服務說明，取得 People of Action 自評分數與評語。
+    updated_at: "2026-02-04"
 
 apis:
   - name: 職業照生成（快版／Gemini）
     path: /api/career_photo_fast
     method: POST
     description: 自拍＋職業 → 職業照，需 GEMINI_API_KEY。
+    updated_at: "2026-02-04"
   - name: 職業照生成（Replicate）
     path: /api/career_photo
     method: POST
     description: 自拍＋職業 → 職業照（SAM+InstantID），需 REPLICATE_API_TOKEN。
+    updated_at: "2026-02-04"
   - name: stage1/reply（RID3510）
     path: /stage1/reply
     method: POST
     description: RID3510 階段 1 回覆 API，意圖＋知識庫＋Gemini；與 Make / LINE 同一路徑。
+    updated_at: "2026-02-04"
   - name: RID3510 回覆（API 路徑）
     path: /api/rid3510/reply
     method: POST
     description: 同上，namespace 路徑。
+    updated_at: "2026-02-04"
   - name: People of Action 評分
     path: /api/rotary/photo_scores
     method: POST
     description: 評分 API（排程用，需 ROTARY_API_KEY）。
+    updated_at: "2026-02-04"
