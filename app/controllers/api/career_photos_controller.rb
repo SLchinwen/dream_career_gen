@@ -44,7 +44,7 @@ module Api
     rescue GeminiService::ApiError, InstantIdService::ApiError, InstantIdService::PredictionFailed => e
       err_msg = e.message
       if err_msg.to_s.include?("list index out of range")
-        err_msg = "InstantID 無法處理此圖片（list index out of range）。請務必改選「使用圖片網址」、貼上「可直接在瀏覽器新分頁開啟的」https 圖片連結，且照片需單一人臉、清晰正面；或改用快版（純 Gemini）。"
+        err_msg = "InstantID 無法處理此圖片（list index out of range）。Replicate 此模型對「孩童照」或部分圖床常失敗，建議直接改用「快版（純 Gemini）」較穩定；若堅持用本版，請換成「單一成人、正面、清晰臉部」的 https 圖片。"
       end
       render json: { error: err_msg }, status: :unprocessable_entity
     end
