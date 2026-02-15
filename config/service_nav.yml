@@ -6,12 +6,12 @@ meta:
   description: 本機／同一伺服器上已發布的網頁服務與 API 列表，供測試與對外說明。
 
 pages:
-  - name: 夢想職人照（快版）
+  - name: 夢想職人照（快版／純 Gemini）
     path: /career_photo_fast
-    description: 上傳自拍與選擇職業，以 Gemini 快速產生職業照。
-  - name: 夢想職人照
+    description: 上傳自拍與選擇職業，以 Gemini 產生職業照。需 GEMINI_API_KEY。兩版網頁操作相同，僅 AI 不同。
+  - name: 夢想職人照（Replicate 版）
     path: /career_photo
-    description: 上傳自拍與選擇職業，產生職業照（完整流程）。
+    description: 同上操作，以 Replicate（SAM+InstantID）生成，相似度較高。需 REPLICATE_API_TOKEN。
   - name: RID3510 聊天
     path: /rid3510/chat
     description: 3510 區聊天機器人模擬頁，可測試 stage1/reply API。
@@ -20,14 +20,14 @@ pages:
     description: 上傳相片與服務說明，取得 People of Action 自評分數與評語。
 
 apis:
-  - name: 職業照生成（快版）
+  - name: 職業照生成（快版／Gemini）
     path: /api/career_photo_fast
     method: POST
-    description: 自拍＋職業 → 職業照（Gemini 快版）。
-  - name: 職業照生成
+    description: 自拍＋職業 → 職業照，需 GEMINI_API_KEY。
+  - name: 職業照生成（Replicate）
     path: /api/career_photo
     method: POST
-    description: 自拍＋職業 → 職業照（完整流程）。
+    description: 自拍＋職業 → 職業照（SAM+InstantID），需 REPLICATE_API_TOKEN。
   - name: stage1/reply（RID3510）
     path: /stage1/reply
     method: POST

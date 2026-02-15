@@ -2,6 +2,8 @@
 
 > 取得 Replicate 與 Gemini 金鑰後，依下列其中一種方式注入，**勿將金鑰明文提交至 Git**。
 
+**夢想職人照兩版本各自金鑰**：網頁操作相同，僅 AI 生成方式不同。快版（`/career_photo_fast`）用 **GEMINI_API_KEY**；Replicate 版（`/career_photo`）用 **REPLICATE_API_TOKEN**。本機可複製 **`.env.example`** 為 **`.env`** 並填入兩組金鑰，開發時兩版皆可用。
+
 ---
 
 ## 若終端機顯示「ruby 找不到」
