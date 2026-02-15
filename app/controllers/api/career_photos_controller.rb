@@ -23,7 +23,7 @@ module Api
       end
       if image_url.start_with?("data:")
         return render json: {
-          error: "Replicate 版不支援「上傳照片」產生的 data URL，易導致 InstantID 失敗。請改選「使用圖片網址」並貼上可公開存取的 https 圖片連結（例如先上傳至 Imgur 取得連結）。"
+          error: "本版（Replicate）目前不支援上傳產生的 data URL，且對學童照常失敗。學童自拍＋夢想職業請改用「快版」以穩定生成長大職業照。"
         }, status: :unprocessable_entity
       end
 
@@ -44,7 +44,7 @@ module Api
     rescue GeminiService::ApiError, InstantIdService::ApiError, InstantIdService::PredictionFailed => e
       err_msg = e.message
       if err_msg.to_s.include?("list index out of range")
-        err_msg = "InstantID 無法處理此圖片（list index out of range）。Replicate 此模型對「孩童照」或部分圖床常失敗，建議直接改用「快版（純 Gemini）」較穩定；若堅持用本版，請換成「單一成人、正面、清晰臉部」的 https 圖片。"
+        err_msg = "本服務需傳入學童自拍以模擬長大職業照，但 Replicate 此模型目前對學童照支援不穩（list index out of range）。請改用「快版（純 Gemini）」以達成學童→長大職業照。"
       end
       render json: { error: err_msg }, status: :unprocessable_entity
     end

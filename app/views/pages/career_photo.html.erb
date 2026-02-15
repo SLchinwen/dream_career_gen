@@ -38,17 +38,16 @@
 </style>
 
 <div class="dream-career-page">
-  <a href="<%= career_photo_fast_page_path %>" style="font-size: 0.875rem; color: #64748b; margin-bottom: 1rem; display: block;">← 夢想職人照（快版／純 Gemini）</a>
+  <a href="<%= career_photo_fast_page_path %>" style="font-size: 0.875rem; color: #059669; font-weight: 600; margin-bottom: 1rem; display: block;">← 推薦：夢想職人照（快版）— 學童自拍穩定支援</a>
 
   <div class="hero">
     <h1>✨ 夢想職業照</h1>
-    <p class="tagline">Replicate 版（SAM + InstantID，相似度較高）</p>
-    <span class="version-badge">需 REPLICATE_API_TOKEN（.env 或 Cloud Run 變數）</span>
+    <p class="tagline">Replicate 版（SAM + InstantID）</p>
+    <span class="version-badge">需 REPLICATE_API_TOKEN</span>
   </div>
 
   <div class="encourage">
-    <p><strong>操作與快版相同：</strong>上傳照片、選擇夢想職業，AI 以 Replicate（年齡變化＋擬真）生成職人照。兩版本差別僅在 AI 生成方式，本版需設定 REPLICATE_API_TOKEN。</p>
-    <p style="margin-top: 0.5rem; font-size: 0.875rem;"><strong>注意：</strong>Replicate InstantID 對孩童照、部分圖床常失敗（list index out of range）。若需穩定產圖，建議改用上方「快版（純 Gemini）」；本版較適合「單一成人、正面、清晰臉部」的 https 圖片。</p>
+    <p><strong>本服務目的：學童自拍＋夢想職業 → 模擬長大後的職業神氣模樣。</strong> 傳入學童照片是必須的。本版（Replicate）與快版目的一致，但目前 Replicate InstantID 對學童照常失敗（list index out of range），<strong>請改用上方「快版」</strong>以穩定達成學童→長大職業照。</p>
   </div>
 
   <form id="dream-career-form">
@@ -66,9 +65,9 @@
       <img id="preview" class="preview" alt="" style="display: none;">
     </div>
     <div id="wrap_url" class="image-source-wrap" style="display: none;">
-      <label for="image_url">圖片網址（需為 https 可公開存取）</label>
+      <label for="image_url">圖片網址（https 可公開存取）</label>
       <input type="text" id="image_url" name="image_url" placeholder="https://...">
-      <p class="hint">Replicate 模型建議使用可公開存取的 https 連結，可減少「list index out of range」等錯誤。</p>
+      <p class="hint">學童照在本版仍常失敗，建議改用快版。</p>
     </div>
 
     <div>
@@ -157,7 +156,7 @@
   </div>
 
   <footer class="page-footer">
-    <a href="<%= career_photo_fast_page_path %>">使用快版（純 Gemini）</a> · 綠色奇蹟公益服務網協會提供 2026
+    <a href="<%= career_photo_fast_page_path %>">學童自拍請用快版（推薦）</a> · 綠色奇蹟公益服務網協會提供 2026
   </footer>
 </div>
 

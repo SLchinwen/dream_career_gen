@@ -7,13 +7,13 @@ meta:
   summary: 綠色奇蹟提供 AI 相關服務，協助志工與民眾正確取得服務使用。
 
 pages:
-  - name: 夢想職人照（快版／純 Gemini）
+  - name: 夢想職人照（推薦・快版）
     path: /career_photo_fast
-    description: 上傳自拍與選擇職業，以 Gemini 產生職業照。需 GEMINI_API_KEY。兩版網頁操作相同，僅 AI 不同。
+    description: 學童自拍＋夢想職業 → 模擬長大後職業照。推薦使用，穩定支援學童照。需 GEMINI_API_KEY。
     updated_at: "2026-02-04"
   - name: 夢想職人照（Replicate 版）
     path: /career_photo
-    description: 同上操作，以 Replicate（SAM+InstantID）生成，相似度較高。需 REPLICATE_API_TOKEN。
+    description: 同上目的，目前對學童照常失敗，建議用快版。需 REPLICATE_API_TOKEN。
     updated_at: "2026-02-04"
   - name: RID3510 聊天
     path: /rid3510/chat
