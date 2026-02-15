@@ -48,14 +48,27 @@
 
   <div class="encourage">
     <p><strong>操作與快版相同：</strong>上傳照片、選擇夢想職業，AI 以 Replicate（年齡變化＋擬真）生成職人照。兩版本差別僅在 AI 生成方式，本版需設定 REPLICATE_API_TOKEN。</p>
+    <p style="margin-top: 0.5rem; font-size: 0.875rem;"><strong>若出現「list index out of range」或預測失敗：</strong>Replicate 模型較適合「可公開存取的圖片網址」。請先將照片上傳到圖床或相簿取得 https 連結，在下方改選「使用圖片網址」貼上後再生成。</p>
   </div>
 
   <form id="dream-career-form">
     <div>
+      <label for="image_source">圖片來源</label>
+      <div class="gender-options" style="margin-bottom: 0.5rem;">
+        <label><input type="radio" name="image_source" value="file" checked> 上傳照片</label>
+        <label><input type="radio" name="image_source" value="url"> 使用圖片網址</label>
+      </div>
+    </div>
+    <div id="wrap_file" class="image-source-wrap">
       <label for="image_file">上傳照片</label>
-      <input type="file" id="image_file" name="image_file" accept="image/*" required>
+      <input type="file" id="image_file" name="image_file" accept="image/*">
       <p class="hint">請上傳一張人臉清晰的自拍照，方便 AI 辨識特徵。</p>
       <img id="preview" class="preview" alt="" style="display: none;">
+    </div>
+    <div id="wrap_url" class="image-source-wrap" style="display: none;">
+      <label for="image_url">圖片網址（需為 https 可公開存取）</label>
+      <input type="text" id="image_url" name="image_url" placeholder="https://...">
+      <p class="hint">Replicate 模型建議使用可公開存取的 https 連結，可減少「list index out of range」等錯誤。</p>
     </div>
 
     <div>
@@ -152,6 +165,9 @@
 (function() {
   const form = document.getElementById("dream-career-form");
   const imageFileInput = document.getElementById("image_file");
+  const imageUrlInput = document.getElementById("image_url");
+  const wrapFile = document.getElementById("wrap_file");
+  const wrapUrl = document.getElementById("wrap_url");
   const previewImg = document.getElementById("preview");
   const careerSelect = document.getElementById("career");
   const careerCustomWrap = document.getElementById("career_custom_wrap");
@@ -164,6 +180,16 @@
 
   let timerInterval = null;
   let startTime = 0;
+
+  form.querySelectorAll('input[name="image_source"]').forEach(function(radio) {
+    radio.addEventListener("change", function() {
+      const useUrl = this.value === "url";
+      wrapFile.style.display = useUrl ? "none" : "block";
+      wrapUrl.style.display = useUrl ? "block" : "none";
+      imageFileInput.required = !useUrl;
+      imageUrlInput.required = useUrl;
+    });
+  });
 
   function getCareerValue() {
     if (careerSelect.value === "other") {
@@ -238,6 +264,7 @@
 
     const career = getCareerValue();
     const studentId = studentIdInput.value.trim();
+    const useUrl = (form.querySelector('input[name="image_source"]:checked') || {}).value === "url";
 
     if (!career) {
       resultContent.innerHTML = '<span class="error">請選擇或輸入夢想職業。</span>';
@@ -245,18 +272,32 @@
       return;
     }
 
-    const file = imageFileInput.files && imageFileInput.files[0];
-    if (!file) {
-      resultContent.innerHTML = '<span class="error">請上傳一張照片。</span>';
-      resultEl.style.display = "block";
-      return;
+    let imageUrl = "";
+    if (useUrl) {
+      imageUrl = imageUrlInput.value.trim();
+      if (!imageUrl) {
+        resultContent.innerHTML = '<span class="error">請填寫圖片網址（需為 https 可公開存取）。</span>';
+        resultEl.style.display = "block";
+        return;
+      }
+      if (!imageUrl.match(/^https:\/\//i)) {
+        resultContent.innerHTML = '<span class="error">圖片網址請使用 https:// 開頭。</span>';
+        resultEl.style.display = "block";
+        return;
+      }
+    } else {
+      const file = imageFileInput.files && imageFileInput.files[0];
+      if (!file) {
+        resultContent.innerHTML = '<span class="error">請上傳一張照片。</span>';
+        resultEl.style.display = "block";
+        return;
+      }
+      imageUrl = await new Promise(function(resolve) {
+        const r = new FileReader();
+        r.onload = function() { resolve(r.result); };
+        r.readAsDataURL(file);
+      });
     }
-
-    const imageUrl = await new Promise(function(resolve) {
-      const r = new FileReader();
-      r.onload = function() { resolve(r.result); };
-      r.readAsDataURL(file);
-    });
 
     submitBtn.disabled = true;
     resultEl.style.display = "block";
