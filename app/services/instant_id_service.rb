@@ -84,6 +84,11 @@ class InstantIdService
       output = poll_until_done(data["id"], token)
     end
 
+    if status == "failed"
+      err_msg = data["error"].to_s.presence || data["logs"].to_s.split("\n").last(3).join(" ")
+      raise PredictionFailed, "InstantID 預測失敗: #{err_msg.presence || '未知原因'}"
+    end
+
     image_url = extract_image_url(output, data)
     raise PredictionFailed, "Replicate 未回傳圖片 URL（status: #{status}）" if image_url.blank?
 
