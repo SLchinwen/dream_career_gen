@@ -17,12 +17,12 @@ module Rid3510
     # @return [Hash, Array] intent_paths hash, fallback_paths array
     def load_intent_paths
       yaml_path = @base_dir.join("rag-intent-paths.yaml")
-      return [{}, []] unless yaml_path.exist?
+      return [ {}, [] ] unless yaml_path.exist?
 
       data = YAML.load_file(yaml_path)
       intent_paths = data.is_a?(Hash) ? (data["intent_paths"] || {}) : {}
       fallback_paths = data.is_a?(Hash) ? (data["fallback_paths"] || []) : []
-      [intent_paths, fallback_paths]
+      [ intent_paths, fallback_paths ]
     end
 
     # @param intent [String] 意圖名稱（與 rag-intent-paths.yaml 的 key 一致）

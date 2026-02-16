@@ -61,7 +61,7 @@ module Rid3510
     def self.to_contents(turns)
       Array(turns).map do |t|
         role = t["role"] == "model" ? "model" : "user"
-        { role: role, parts: [{ text: t["text"].to_s }] }
+        { role: role, parts: [ { text: t["text"].to_s } ] }
       end
     end
 

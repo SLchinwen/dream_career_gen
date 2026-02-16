@@ -127,7 +127,7 @@ class GeminiCareerFastService
     PROMPT
 
     body = {
-      contents: [{ parts: [{ text: prompt }] }],
+      contents: [ { parts: [ { text: prompt } ] } ],
       generationConfig: {
         temperature: 0.3,
         maxOutputTokens: 256,
@@ -156,11 +156,11 @@ class GeminiCareerFastService
     body = {
       contents: [
         {
-          parts: [{ text: prompt }]
+          parts: [ { text: prompt } ]
         }
       ],
       generationConfig: {
-        responseModalities: ["TEXT", "IMAGE"],
+        responseModalities: [ "TEXT", "IMAGE" ],
         imageConfig: { aspectRatio: "3:4" }
       }
     }

@@ -69,11 +69,11 @@ module Rid3510
 
       contents = []
       if intent_context.present? && intent_context != KnowledgeService::DEFAULT_FALLBACK_MESSAGE
-        contents << { role: "user", parts: [{ text: "【本次問題相關知識庫】\n#{intent_context[0, 6000]}" }] }
-        contents << { role: "model", parts: [{ text: "已讀取上述知識庫，請提出您的問題。" }] }
+        contents << { role: "user", parts: [ { text: "【本次問題相關知識庫】\n#{intent_context[0, 6000]}" } ] }
+        contents << { role: "model", parts: [ { text: "已讀取上述知識庫，請提出您的問題。" } ] }
       end
       contents.concat(ConversationStore.to_contents(history_turns))
-      contents << { role: "user", parts: [{ text: user_message }] }
+      contents << { role: "user", parts: [ { text: user_message } ] }
 
       body = {
         cachedContent: cache_name,
@@ -116,7 +116,7 @@ module Rid3510
       full_prompt = "#{SYSTEM_PROMPT}\n\n---\n\n#{user_content}"
 
       body = {
-        contents: [{ parts: [{ text: full_prompt }] }],
+        contents: [ { parts: [ { text: full_prompt } ] } ],
         generationConfig: {
           temperature: 0.7,
           maxOutputTokens: 1024,

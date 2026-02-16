@@ -58,8 +58,8 @@ module Rid3510
 
         body = {
           model: "models/#{MODEL}",
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          contents: [{ role: "user", parts: [{ text: prefix_text }] }],
+          systemInstruction: { parts: [ { text: SYSTEM_PROMPT } ] },
+          contents: [ { role: "user", parts: [ { text: prefix_text } ] } ],
           ttl: "#{CACHE_TTL_SECONDS}s"
         }
 

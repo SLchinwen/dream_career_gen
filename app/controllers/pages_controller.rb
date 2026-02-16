@@ -53,26 +53,26 @@ class PagesController < ApplicationController
 
     if request.format.json?
       render json: @result
-      return
+      nil
     end
   rescue Rotary::PhotoScoreService::MissingApiKey => e
     @error = "系統未設定 GEMINI_API_KEY：#{e.message}"
     @image_url = image_url
-    return render_json_error(503) if request.format.json?
+    render_json_error(503) if request.format.json?
   rescue Rotary::PhotoScoreService::ApiError => e
     @error = "評分失敗：#{e.message}"
     @image_url = image_url
-    return render_json_error if request.format.json?
+    render_json_error if request.format.json?
   rescue ArgumentError => e
     @error = e.message
     @image_url = image_url
-    return render_json_error if request.format.json?
+    render_json_error if request.format.json?
   rescue StandardError => e
     Rails.logger.error("rotary_photo_score error: #{e.class} #{e.message}\n#{e.backtrace.first(5).join("\n")}")
     @error = "發生錯誤，請稍後再試：#{e.message}"
     @image_url = image_url
     @description = description
-    return render_json_error(500) if request.format.json?
+    render_json_error(500) if request.format.json?
   end
 
   # RID3510 聊天機器人模擬頁（供直接測試 stage1/reply API）

@@ -84,7 +84,7 @@ class GeminiService
     raise MissingApiKey, "GEMINI_API_KEY 未設定（請檢查 .env 或 credentials）" if key.blank?
 
     body = {
-      contents: [{ parts: [{ text: photorealistic_career_prompt }] }],
+      contents: [ { parts: [ { text: photorealistic_career_prompt } ] } ],
       generationConfig: { temperature: 0.7, maxOutputTokens: 512, responseMimeType: "text/plain" }
     }
 

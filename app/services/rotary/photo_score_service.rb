@@ -105,7 +105,7 @@ module Rotary
 
       raise ArgumentError, "請提供圖片網址（image_url）或上傳檔案（photo）" if raw.blank?
 
-      [Base64.strict_encode64(raw), mime]
+      [ Base64.strict_encode64(raw), mime ]
     end
 
     def fetch_image_from_url(url)
@@ -151,7 +151,7 @@ module Rotary
 
       # 依檔案開頭判斷實際格式，避免標頭與內容不符導致 Gemini 400
       mime = detect_image_mime(raw) || content_type_header || "image/jpeg"
-      [raw, mime]
+      [ raw, mime ]
     end
 
     def parse_gemini_error(res)

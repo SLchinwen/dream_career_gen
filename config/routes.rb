@@ -27,12 +27,12 @@ Rails.application.routes.draw do
 
   # API：自拍＋職業 → 職業照
   namespace :api do
-    resources :career_photos, only: [:create], path: "career_photo"
+    resources :career_photos, only: [ :create ], path: "career_photo"
     post "career_photo_fast" => "career_photos_fast#create"
 
     # People of Action 評分 API（排程用，需 ROTARY_API_KEY）
     namespace :rotary do
-      resources :photo_scores, only: [:create]
+      resources :photo_scores, only: [ :create ]
     end
 
     # RID3510 階段 1 回覆 API（意圖＋知識庫＋Gemini，從子模組 rid3510 讀取）
