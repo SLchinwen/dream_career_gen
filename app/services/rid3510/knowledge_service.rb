@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "set"
 require "yaml"
 
 # 從子模組 rid3510 讀取 rag-intent-paths.yaml 與對應 .md，組合成知識庫 context。
@@ -37,6 +38,39 @@ module Rid3510
 
       Array(paths).each do |rel_path|
         # YAML 路徑為相對 rid3510 根目錄，可能含 docs/xx/yy.md，需拆成多段以相容 Windows
+        full = @base_dir.join(*rel_path.to_s.split("/"))
+        next unless full.exist? && full.extname == ".md"
+
+        begin
+          text = File.read(full, encoding: "UTF-8")
+          text = text[0, max_chars - total] if total + text.length > max_chars
+          parts << "--- #{rel_path} ---\n#{text}"
+          total += text.length
+          break if total >= max_chars
+        rescue StandardError
+          next
+        end
+      end
+
+      parts.any? ? parts.join("\n\n") : DEFAULT_FALLBACK_MESSAGE
+    end
+
+    # 合併所有意圖與 fallback 路徑的知識庫內容，供 Context Caching 使用。
+    # @param max_chars [Integer] 總字數上限
+    # @return [String]
+    def merged_context_for_cache(max_chars: 12_000)
+      intent_paths, fallback_paths = load_intent_paths
+      all_paths = (intent_paths.values.flatten + Array(fallback_paths)).compact.uniq
+      return DEFAULT_FALLBACK_MESSAGE if all_paths.empty?
+
+      parts = []
+      total = 0
+      seen = Set.new
+
+      all_paths.each do |rel_path|
+        next if seen.include?(rel_path)
+        seen << rel_path
+
         full = @base_dir.join(*rel_path.to_s.split("/"))
         next unless full.exist? && full.extname == ".md"
 

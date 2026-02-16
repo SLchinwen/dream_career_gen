@@ -101,12 +101,15 @@
     hideError();
 
     try {
+      const payload = { message: message };
+      if (window.rid3510ConversationId) payload.conversation_id = window.rid3510ConversationId;
       const res = await fetch('/stage1/reply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '' },
-        body: JSON.stringify({ message: message })
+        body: JSON.stringify(payload)
       });
       const data = await res.json().catch(function() { return {}; });
+      if (data.conversation_id) window.rid3510ConversationId = data.conversation_id;
       if (!res.ok) {
         addMessage((data.reply || data.error || '請求失敗，請稍後再試。'), false, data.intent || 'fallback');
         if (data.error) showError(data.error);
