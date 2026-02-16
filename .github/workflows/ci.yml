@@ -83,6 +83,11 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Setup test database
+        env:
+          RAILS_ENV: test
+        run: bin/rails db:create db:migrate
+
       - name: Run tests
         env:
           RAILS_ENV: test
@@ -107,6 +112,11 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
+      - name: Setup test database
+        env:
+          RAILS_ENV: test
+        run: bin/rails db:create db:migrate
 
       - name: Run System Tests
         env:
