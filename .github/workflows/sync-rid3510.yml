@@ -1,0 +1,46 @@
+# 同步 rid3510 子模組至最新 main，並 push 以觸發 Cloud Build 部署。
+# 用途：Rid3510 知識庫更新後，讓聊天機器人自動使用新內容。
+#
+# 觸發方式（二擇一或並用）：
+# 1. 排程：每日 00:00 UTC 檢查一次（約台灣 08:00）。
+# 2. 手動：Actions 頁面 Run workflow。
+# 3. 由 Rid3510 repo 的 push 用 repository_dispatch 觸發（需在 Rid3510 設 workflow 呼叫此 API）。
+#
+# 必要：在 dream_career_gen 的 Settings → Secrets 建立 REPO_PAT（對本 repo 有 push 權限的 GitHub PAT）。
+
+name: Sync rid3510 submodule
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [ sync-rid3510 ]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout dream_career_gen
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.REPO_PAT }}
+          submodules: true
+          fetch-depth: 0
+
+      - name: Update rid3510 submodule to latest main
+        run: |
+          git submodule update --remote rid3510
+          git status
+
+      - name: Commit and push if submodule changed
+        run: |
+          if ! git status --porcelain | grep -q rid3510; then
+            echo "No change in rid3510 submodule, skip push."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add rid3510
+          git commit -m "chore: 同步 rid3510 子模組至最新 main（知識庫自動更新）"
+          git push origin main

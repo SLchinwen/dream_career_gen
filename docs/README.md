@@ -24,6 +24,9 @@
 | [19-驗證與重新部署步驟.md](19-驗證與重新部署步驟.md) | 改過程式後重新部署、驗證 API 與「目前總監／這屆」日期對齊 | 重新部署、stage1/reply 驗證、日期對齊檢查 |
 | [20-子模組已加好-建立API並部署.md](20-子模組已加好-建立API並部署.md) | 子模組 rid3510 加好後，建立 stage1/reply API 與部署步驟（含日期對齊） | 建置指引、給 AI 的一句話指令 |
 | [21-服務導覽與發布治理.md](21-服務導覽與發布治理.md) | 主網頁導覽頁用途、config/service_nav.yml 結構、發布新 API／網頁時加入導覽的步驟與檢查清單 | 同機多服務導覽、發布新服務時更新導覽、治理辦法 |
+| [22-RID3510-CONTEXT-CACHING-AND-REDIS.md](22-RID3510-CONTEXT-CACHING-AND-REDIS.md) | RID3510 聊天：Context Caching 與 Redis 10 輪對話、conversation_id、無意義回合、決策紀錄 | RID3510 多輪與快取實作、維運對齊 |
+| [23-GCP-CLOUD-MEMORYSTORE-REDIS.md](23-GCP-CLOUD-MEMORYSTORE-REDIS.md) | GCP Cloud Memorystore（Redis）申請與設定、REDIS_URL、Cloud Run VPC 連線 | 部署 RID3510 對話儲存、雲端 Redis 設定 |
+| [24-RID3510-知識庫自動更新部署.md](24-RID3510-知識庫自動更新部署.md) | Rid3510 知識庫 repo 更新後，聊天機器人自動取得新內容的設計（子模組自動同步、排程、建置時拉最新） | 知識庫自動更新、CI/CD 設計 |
 
 ---
 
