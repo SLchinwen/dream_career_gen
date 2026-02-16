@@ -30,11 +30,11 @@ module Rid3510
       cache_name = ContextCacheService.get_or_create
 
       reply = begin
+        intent_context = KnowledgeService.new.context_for_intent(intent, max_chars: 6000)
         if cache_name.present?
-          ask_gemini_with_cache(message, history, cache_name)
+          ask_gemini_with_cache(message, history, cache_name, intent_context: intent_context)
         else
-          context = KnowledgeService.new.context_for_intent(intent, max_chars: 6000)
-          ask_gemini(message, context)
+          ask_gemini(message, intent_context)
         end
       rescue MissingApiKey, ApiError => e
         "查詢時發生錯誤，請稍後再試或聯繫地區 e 化主委。（#{e.message[0, 100]}）"
@@ -62,12 +62,17 @@ module Rid3510
       "【系統日期】今日為 #{today.year}年#{today.month}月#{today.day}日。當前扶輪年度為 #{year_str}。使用者問「目前總監」「這屆總監」「今年」時請依此年度回答。"
     end
 
-    # 使用 Context Cache：contents = 歷史多輪 + 本次使用者訊息
-    def ask_gemini_with_cache(user_message, history_turns, cache_name)
+    # 使用 Context Cache：contents = 本次意圖知識庫（避免合併 cache 截斷漏掉） + 歷史多輪 + 本次使用者訊息
+    def ask_gemini_with_cache(user_message, history_turns, cache_name, intent_context: nil)
       key = ApiKeys.gemini_api_key
       raise MissingApiKey, "GEMINI_API_KEY 未設定（請檢查 .env 或 credentials）" if key.blank?
 
-      contents = ConversationStore.to_contents(history_turns)
+      contents = []
+      if intent_context.present? && intent_context != KnowledgeService::DEFAULT_FALLBACK_MESSAGE
+        contents << { role: "user", parts: [{ text: "【本次問題相關知識庫】\n#{intent_context[0, 6000]}" }] }
+        contents << { role: "model", parts: [{ text: "已讀取上述知識庫，請提出您的問題。" }] }
+      end
+      contents.concat(ConversationStore.to_contents(history_turns))
       contents << { role: "user", parts: [{ text: user_message }] }
 
       body = {
