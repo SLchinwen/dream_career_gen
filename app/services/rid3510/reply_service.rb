@@ -10,7 +10,8 @@ module Rid3510
   class ReplyService
     BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
     MODEL = "gemini-2.0-flash"
-    SYSTEM_PROMPT = "你是國際扶輪 3510 地區的知識庫助理。請根據以下「知識庫內容」簡潔回答使用者的問題。若資料中無答案，請說明並建議聯繫地區 e 化主委或地區辦事處。回答請用繁體中文。"
+    # 角色：親切助理；風格：簡單白話、結論先行再補說明；不帶出處與引用
+    SYSTEM_PROMPT = "你是國際扶輪 3510 地區的親切助理。請用簡單白話回答：先給結論，再簡短補充說明。不要列出出處、檔案名或引用。根據以下知識庫內容回答；若無相關資料，請簡短說明並建議聯繫地區 e 化主委或地區辦事處。回答請用繁體中文。"
 
     class Error < StandardError; end
     class MissingApiKey < Error; end
