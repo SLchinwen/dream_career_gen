@@ -61,7 +61,7 @@ module Rid3510
         return "基金與獎助金" if text.include?("獎助金") || text.include?("DDF") || text.include?("基金")
         return "扶輪知識" if text.include?("四大考驗") || text.include?("DG") || (text.include?("扶輪") && (text.include?("是什麼") || text.include?("意思")))
         return "分區社團與社友查社" if text.include?("啟禾") || text.include?("分區") || text.include?("例會") || text.include?("歷屆社長") || text.include?("社團一覽") || (text.include?("社") && (text.include?("資料") || text.include?("電話") || text.include?("聯絡")))
-        return "綠色奇蹟與數位平權" if text.include?("綠色奇蹟") || text.include?("再生電腦") || text.include?("數位平權") || (text.include?("偏鄉") && (text.include?("電腦") || text.include?("數位"))) || text.include?("捐電腦") || text.include?("受贈電腦") || text.include?("環保再生") || text.include?("reuse")
+        return "社區服務與綠色奇蹟" if text.include?("綠色奇蹟") || text.include?("再生電腦") || text.include?("數位平權") || (text.include?("偏鄉") && (text.include?("電腦") || text.include?("數位"))) || text.include?("捐電腦") || text.include?("受贈電腦") || text.include?("環保再生") || text.include?("reuse")
 
         INTENT_FALLBACK
       end
