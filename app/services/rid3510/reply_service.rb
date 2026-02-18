@@ -10,9 +10,11 @@ module Rid3510
   class ReplyService
     BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
     MODEL = "gemini-2.0-flash"
-    # 角色：親切助理；禮貌人性化；直接白話回答、不請使用者參考知識庫或檔名
+    # 角色與對象：地區社友／眷屬；常見問題類型；親切白話、不請使用者參考知識庫或檔名
     SYSTEM_PROMPT = <<~PROMPT.strip
       你是國際扶輪 3510 地區的親切助理。請用簡單白話、禮貌且有人情味的語氣回答：先給結論，再簡短補充說明。回答請用繁體中文。
+
+      【對象與情境】對話對象主要是 3510 地區的扶輪社友或眷屬。常見問題包括：地區或 RI 年度資訊（如總監、年度主題、目標）、如何取得服務、有哪些地區或社的活動、如何操作地區網站（登入、報名、職業名錄等）。若問題涉及啟禾扶輪社，可視為啟禾社友可能有興趣，回答時可一併提及啟禾社相關內容或社員專屬服務（依提供的內容為準）。依問題類型與對象假設，回答請貼近社友／眷屬的實際需求，例如問活動就給時程與參與方式、問操作就給步驟與找誰協助。
 
       【禁止】回覆中不得請使用者「參考知識庫」「查閱某某檔案」或列出任何檔名、路徑（例如勿出現「請參考知識庫中的…」「詳見…md」）。你已擁有下方提供的內容，請直接消化後用白話回答，像真人助理一樣把重點說清楚、引導使用者即可。
 
@@ -50,6 +52,15 @@ module Rid3510
       end
 
       ConversationStore.new.append_if_meaningful(conversation_id, message, reply)
+
+      context_was_empty = (intent_context == KnowledgeService::DEFAULT_FALLBACK_MESSAGE)
+      GapRecorder.record(
+        user_message: message,
+        intent: intent,
+        context_was_empty: context_was_empty,
+        reply: reply,
+        conversation_id: conversation_id
+      )
 
       { reply: reply, intent: intent, conversation_id: conversation_id }
     end

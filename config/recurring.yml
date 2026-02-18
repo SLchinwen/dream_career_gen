@@ -8,8 +8,12 @@
 #     command: "SoftDeletedRecord.due.delete_all"
 #     priority: 2
 #     schedule: at 5am every day
-
 production:
+  # 每日凌晨 2 點處理「無法回答」紀錄、產出待補 QA 建議（含可選 Gemini 建議答案）
+  rid3510_process_gaps:
+    class: Rid3510::ProcessGapsJob
+    args: [ { days: 7 } ]
+    schedule: "0 2 * * *"
   clear_solid_queue_finished_jobs:
     command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
     schedule: every hour at minute 12
