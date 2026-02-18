@@ -54,6 +54,12 @@ module Rid3510
 
       # 子模組無 intent_keywords 時沿用舊邏輯，避免部署未更新子模組時失效
       def detect_fallback(text)
+        if text.include?("遴選") || text.include?("幹部選舉") || text.include?("辦法") || text.include?("規章") || text.include?("章程") || text.include?("細則") || text.include?("程序手冊")
+          return "扶輪知識"
+        end
+        if (text.include?("選舉") && (text.include?("社長") || text.include?("幹部") || text.include?("職員")))
+          return "扶輪知識"
+        end
         return "3510歷史" if text.include?("總監") || text.include?("屆") || text.include?("歷年")
         return "E化操作" if text.include?("登入") || text.include?("LINE") || text.include?("綁定") || (text.include?("報名") && text.include?("活動"))
         return "現有活動" if text.include?("年會") || text.include?("RYLA") || text.include?("活動") || text.include?("日期") || text.include?("訓練")
