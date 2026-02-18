@@ -48,7 +48,7 @@ module Rid3510
           ask_gemini(message, intent_context)
         end
       rescue MissingApiKey, ApiError => e
-        "查詢時發生錯誤，請稍後再試或聯繫地區 e 化主委。（#{e.message[0, 100]}）"
+        user_friendly_error_message(e)
       end
 
       ConversationStore.new.append_if_meaningful(conversation_id, message, reply)
@@ -117,6 +117,10 @@ module Rid3510
       req.body = body.to_json
 
       res = http.request(req)
+      if res.code == "429"
+        sleep(2)
+        res = http.request(req)
+      end
       unless res.is_a?(Net::HTTPSuccess)
         raise ApiError, "Gemini API 錯誤: #{res.code} #{res.message} - #{res.body[0, 500]}"
       end
@@ -156,7 +160,10 @@ module Rid3510
       req.body = body.to_json
 
       res = http.request(req)
-
+      if res.code == "429"
+        sleep(2)
+        res = http.request(req)
+      end
       unless res.is_a?(Net::HTTPSuccess)
         raise ApiError, "Gemini API 錯誤: #{res.code} #{res.message} - #{res.body[0, 500]}"
       end
@@ -167,7 +174,16 @@ module Rid3510
 
       text.strip
     rescue MissingApiKey, ApiError => e
-      "查詢時發生錯誤，請稍後再試或聯繫地區 e 化主委。（#{e.message[0, 100]}）"
+      user_friendly_error_message(e)
+    end
+
+    # 不向使用者顯示 API 細節；429 給專用提示，其餘給通用錯誤訊息
+    def user_friendly_error_message(error)
+      msg = error.message.to_s
+      if msg.include?("429") || msg.include?("Too Many Requests") || msg.include?("Resource exha")
+        return "目前使用人數較多、服務暫時忙碌，請稍後再試或聯繫地區 e 化主委。"
+      end
+      "查詢時發生錯誤，請稍後再試或聯繫地區 e 化主委。"
     end
   end
 end
