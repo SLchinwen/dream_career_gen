@@ -22,6 +22,7 @@ Rails.application.routes.draw do
 
   # 共用雲端相簿（GAS 讀取共用硬碟目錄 → 相簿列表與可分享 URL）
   get "albums" => "pages#albums", as: :albums_page
+  get "albums/" => redirect("/albums")
   get "albums/:folder_id" => "pages#album_show", as: :album_show_page, constraints: { folder_id: %r{[^/]+} }
 
   # People of Action 投稿自評（Web：上傳相片＋說明 → 分數與評語）
