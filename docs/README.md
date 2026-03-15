@@ -27,6 +27,8 @@
 | [22-RID3510-CONTEXT-CACHING-AND-REDIS.md](22-RID3510-CONTEXT-CACHING-AND-REDIS.md) | RID3510 聊天：Context Caching 與 Redis 10 輪對話、conversation_id、無意義回合、決策紀錄 | RID3510 多輪與快取實作、維運對齊 |
 | [23-GCP-CLOUD-MEMORYSTORE-REDIS.md](23-GCP-CLOUD-MEMORYSTORE-REDIS.md) | GCP Cloud Memorystore（Redis）申請與設定、REDIS_URL、Cloud Run VPC 連線 | 部署 RID3510 對話儲存、雲端 Redis 設定 |
 | [24-RID3510-知識庫自動更新部署.md](24-RID3510-知識庫自動更新部署.md) | Rid3510 知識庫 repo 更新後，聊天機器人自動取得新內容的設計（子模組自動同步、排程、建置時拉最新） | 知識庫自動更新、CI/CD 設計 |
+| [25-GCP-服務與發布管理建議.md](25-GCP-服務與發布管理建議.md) | GCP 服務檢視、發布流程總覽、要發布的程式與維運管理建議 | 發布管理、維運、交接 |
+| [26-共用雲端相簿服務.md](26-共用雲端相簿服務.md) | GAS 讀取共用雲端硬碟目錄、相簿列表與可分享 URL、部署與權限 | 扶輪活動相簿、GAS、共用硬碟 |
 
 ---
 

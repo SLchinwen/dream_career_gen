@@ -1,0 +1,37 @@
+<% content_for :title, "扶輪活動相簿" %>
+
+<style>
+  .albums-page { max-width: 48rem; margin: 0 auto; padding: 1.5rem 1rem; font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif; }
+  .albums-page h1 { font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; }
+  .albums-page .summary { font-size: 0.9375rem; color: #475569; margin-bottom: 1.5rem; line-height: 1.5; }
+  .albums-page .error-msg { padding: 0.75rem 1rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 0.5rem; color: #dc2626; font-size: 0.875rem; margin-bottom: 1rem; }
+  .albums-page .album-list { display: grid; gap: 0.75rem; }
+  .albums-page .album-card { display: block; padding: 1rem 1.25rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; background: #f8fafc; text-decoration: none; color: inherit; transition: border-color 0.15s, box-shadow 0.15s; }
+  .albums-page .album-card:hover { border-color: #0ea5e9; box-shadow: 0 2px 8px rgba(14, 165, 233, 0.15); }
+  .albums-page .album-card .name { font-weight: 600; color: #0f172a; margin-bottom: 0.25rem; }
+  .albums-page .album-card .count { font-size: 0.8125rem; color: #64748b; }
+  .albums-page .empty-hint { text-align: center; padding: 2rem 1rem; color: #64748b; font-size: 0.9375rem; }
+</style>
+
+<div class="albums-page">
+  <h1>扶輪活動相簿</h1>
+  <p class="summary">由共用雲端硬碟讀取各社上傳的活動相片，不另佔空間。點選年度進入後可選擇活動相簿，再進入相片。年度資料夾顯示「0 張相片」為正常（相片在該年度底下的活動相簿內）。</p>
+
+  <% if @error.present? %>
+    <div class="error-msg" role="alert"><%= @error %></div>
+    <p class="summary">若您為管理員，請確認已設定環境變數 <code>GAS_ALBUM_WEB_APP_URL</code>，並完成 GAS 部署與共用硬碟權限設定。詳見專案文件 <strong>docs/26-共用雲端相簿服務</strong>。</p>
+  <% end %>
+
+  <% if @folders.present? %>
+    <div class="album-list">
+      <% @folders.each do |folder| %>
+        <%= link_to album_show_page_path(folder_id: folder["id"]), class: "album-card" do %>
+          <div class="name"><%= ERB::Util.html_escape(folder["name"].to_s) %></div>
+          <div class="count"><%= folder["photo_count"].to_i %> 張相片</div>
+        <% end %>
+      <% end %>
+    </div>
+  <% elsif @error.blank? %>
+    <p class="empty-hint">目前尚無相簿，或根目錄下沒有子資料夾。請在共用雲端硬碟的相簿根目錄中建立資料夾。</p>
+  <% end %>
+</div>

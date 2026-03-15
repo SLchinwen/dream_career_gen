@@ -1,0 +1,137 @@
+<% content_for :title, "#{@folder_name} — 扶輪活動相簿" %>
+
+<style>
+  .album-show-page { max-width: 56rem; margin: 0 auto; padding: 1.5rem 1rem; font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif; }
+  .album-show-page .header { margin-bottom: 1rem; }
+  .album-show-page .header h1 { font-size: 1.375rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; }
+  .album-show-page .header .back { font-size: 0.875rem; color: #0ea5e9; text-decoration: none; display: inline-block; margin-top: 0.5rem; }
+  .album-show-page .header .back:hover { text-decoration: underline; }
+  .album-show-page .error-msg { padding: 0.75rem 1rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 0.5rem; color: #dc2626; font-size: 0.875rem; margin-bottom: 1rem; }
+  .album-show-page .photo-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem 1rem; }
+  @media (min-width: 768px) { .album-show-page .photo-gallery { grid-template-columns: repeat(4, 1fr); } }
+  .album-show-page .photo-card { margin-bottom: 0; cursor: pointer; transition: opacity 0.3s, transform 0.2s; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .album-show-page .photo-card:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+  .album-show-page .photo-card .thumb-wrap { display: block; height: 200px; background: #e2e8f0; overflow: hidden; }
+  .album-show-page .photo-card .thumb-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .album-show-page .photo-card .card-body { padding: 0.5rem 0.75rem 0.75rem; }
+  .album-show-page .photo-card .photo-name { font-size: 0.8125rem; color: #374151; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 0.25rem; }
+  .album-show-page .photo-card .photo-open-link { font-size: 0.75rem; color: #0ea5e9; text-decoration: none; }
+  .album-show-page .photo-card .photo-open-link:hover { text-decoration: underline; }
+  .album-show-page .empty-hint { text-align: center; padding: 2rem 1rem; color: #64748b; font-size: 0.9375rem; }
+  /* 燈箱 */
+  .album-show-page .lightbox { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; padding: 1rem; }
+  .album-show-page .lightbox.is-open { display: flex; }
+  .album-show-page .lightbox img { max-width: 100%; max-height: 95vh; object-fit: contain; }
+  .album-show-page .lightbox .close { position: absolute; top: 1rem; right: 1rem; width: 2.5rem; height: 2.5rem; background: rgba(255,255,255,0.2); color: #fff; border: none; border-radius: 50%; font-size: 1.25rem; cursor: pointer; line-height: 1; }
+  .album-show-page .lightbox .close:hover { background: rgba(255,255,255,0.35); }
+  .album-show-page .lightbox .prev, .album-show-page .lightbox .next { position: absolute; top: 50%; transform: translateY(-50%); width: 2.5rem; height: 2.5rem; background: rgba(255,255,255,0.2); color: #fff; border: none; border-radius: 50%; font-size: 1.25rem; cursor: pointer; }
+  .album-show-page .lightbox .prev { left: 1rem; }
+  .album-show-page .lightbox .next { right: 1rem; }
+  .album-show-page .lightbox .prev:hover, .album-show-page .lightbox .next:hover { background: rgba(255,255,255,0.35); }
+  .album-show-page .lightbox .caption { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.9); font-size: 0.875rem; max-width: 90%; text-align: center; }
+  .album-show-page .album-list { display: grid; gap: 0.75rem; }
+  .album-show-page .album-card { display: block; padding: 1rem 1.25rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; background: #f8fafc; text-decoration: none; color: inherit; transition: border-color 0.15s, box-shadow 0.15s; }
+  .album-show-page .album-card:hover { border-color: #0ea5e9; box-shadow: 0 2px 8px rgba(14, 165, 233, 0.15); }
+  .album-show-page .album-card .name { font-weight: 600; color: #0f172a; margin-bottom: 0.25rem; }
+  .album-show-page .album-card .count { font-size: 0.8125rem; color: #64748b; }
+</style>
+
+<div class="album-show-page">
+  <div class="header">
+    <h1><%= ERB::Util.html_escape(@folder_name) %></h1>
+    <%= link_to "← 返回相簿列表", albums_page_path, class: "back" %>
+  </div>
+
+  <% if @error.present? %>
+    <div class="error-msg" role="alert"><%= @error %></div>
+  <% end %>
+
+  <% if @subfolders.present? %>
+    <div class="album-list">
+      <% @subfolders.each do |folder| %>
+        <%= link_to album_show_page_path(folder_id: folder["id"]), class: "album-card" do %>
+          <div class="name"><%= ERB::Util.html_escape(folder["name"].to_s) %></div>
+          <div class="count"><%= folder["photo_count"].to_i %> 張相片</div>
+        <% end %>
+      <% end %>
+    </div>
+  <% elsif @photos.present? %>
+    <div class="photo-gallery" id="album-photo-grid">
+      <% @photos.each_with_index do |photo, idx| %>
+        <%
+          thumb = photo["thumbnail_link"].to_s.presence
+          thumb = "https://drive.google.com/thumbnail?id=#{photo['id']}&sz=w400" if thumb.blank? && photo["id"].present?
+          full = photo["web_content_link"].to_s.presence || thumb
+          full = "https://drive.google.com/uc?id=#{photo['id']}&export=view" if full.blank? && photo["id"].present?
+          name = photo["name"].to_s
+        %>
+        <% if thumb.present? %>
+          <div class="photo-card" role="button" tabindex="0" data-index="<%= idx %>" data-full="<%= ERB::Util.html_escape(full) %>" data-name="<%= ERB::Util.html_escape(name) %>" aria-label="<%= ERB::Util.html_escape(name) %>">
+            <span class="thumb-wrap">
+              <img src="<%= ERB::Util.html_escape(thumb) %>" alt="<%= ERB::Util.html_escape(name) %>" class="thumb-img" loading="lazy">
+            </span>
+            <div class="card-body">
+              <span class="photo-name" title="<%= ERB::Util.html_escape(name) %>"><%= ERB::Util.html_escape(name) %></span>
+              <a href="<%= ERB::Util.html_escape(full) %>" class="photo-open-link" target="_blank" rel="noopener" onclick="event.stopPropagation();">在新分頁開啟</a>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="燈箱檢視">
+      <button type="button" class="close" id="lightbox-close" aria-label="關閉">×</button>
+      <button type="button" class="prev" id="lightbox-prev" aria-label="上一張">‹</button>
+      <img id="lightbox-img" src="" alt="">
+      <button type="button" class="next" id="lightbox-next" aria-label="下一張">›</button>
+      <div class="caption" id="lightbox-caption"></div>
+    </div>
+
+    <script>
+      (function() {
+        var lb = document.getElementById('lightbox');
+        var lbImg = document.getElementById('lightbox-img');
+        var lbCaption = document.getElementById('lightbox-caption');
+        var btns = document.querySelectorAll('.album-show-page .photo-card');
+        var items = Array.prototype.slice.call(btns);
+        var current = 0;
+
+        function open(i) {
+          current = i;
+          var btn = items[i];
+          if (!btn) return;
+          lbImg.src = btn.dataset.full || '';
+          lbCaption.textContent = btn.dataset.name || '';
+          lb.classList.add('is-open');
+          document.body.style.overflow = 'hidden';
+        }
+        function close() {
+          lb.classList.remove('is-open');
+          document.body.style.overflow = '';
+        }
+        function prev() {
+          if (current > 0) open(current - 1);
+        }
+        function next() {
+          if (current < items.length - 1) open(current + 1);
+        }
+
+        items.forEach(function(btn, i) {
+          btn.addEventListener('click', function() { open(i); });
+        });
+        document.getElementById('lightbox-close').addEventListener('click', close);
+        document.getElementById('lightbox-prev').addEventListener('click', prev);
+        document.getElementById('lightbox-next').addEventListener('click', next);
+        lb.addEventListener('click', function(e) { if (e.target === lb) close(); });
+        document.addEventListener('keydown', function(e) {
+          if (!lb.classList.contains('is-open')) return;
+          if (e.key === 'Escape') close();
+          if (e.key === 'ArrowLeft') prev();
+          if (e.key === 'ArrowRight') next();
+        });
+      })();
+    </script>
+  <% elsif @subfolders.blank? && @error.blank? %>
+    <p class="empty-hint">此相簿內尚無相片。</p>
+  <% end %>
+</div>

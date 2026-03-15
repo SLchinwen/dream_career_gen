@@ -80,6 +80,34 @@ class PagesController < ApplicationController
     # 僅渲染聊天介面，實際呼叫由前端 POST /stage1/reply
   end
 
+  # 共用雲端相簿：由 GAS 讀取共用硬碟目錄，顯示相簿列表與可分享連結
+  def albums
+    result = GasAlbumService.fetch_folders
+    @error = result["error"]
+    raw = @error ? [] : (result["folders"] || [])
+    @folders = raw.sort_by { |f| f["name"].to_s }
+  end
+
+  # 單一資料夾：若有子資料夾則顯示相簿清單（年度→活動），否則顯示相片網格
+  def album_show
+    @folder_id = params[:folder_id]
+    folder_result = GasAlbumService.fetch_folders(folder_id: @folder_id)
+    @error = folder_result["error"]
+    @subfolders = (folder_result["folders"] || []).sort_by { |f| f["name"].to_s }
+    @folder_name = folder_result["folder_name"].presence || "相簿"
+
+    if @error.blank? && @subfolders.any?
+      @photos = []
+      return
+    end
+
+    photo_result = GasAlbumService.fetch_photos(@folder_id)
+    @error = photo_result["error"]
+    @folder_name = photo_result["folder_name"].presence || @folder_name
+    @photos = @error ? [] : (photo_result["photos"] || [])
+    @subfolders = [] if @subfolders.blank?
+  end
+
   # 僅檢查圖片網址是否可讀取（供前端步驟 1 顯示）
   def rotary_photo_score_check
     image_url = params[:image_url].to_s.strip
