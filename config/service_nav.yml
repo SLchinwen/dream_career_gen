@@ -23,9 +23,9 @@ pages:
     path: /rotary/photo_score
     description: 上傳相片與服務說明，取得 People of Action 自評分數與評語。
     updated_at: "2026-02-04"
-  - name: 扶輪活動相簿
+  - name: RID3510 相簿
     path: /albums
-    description: 由共用雲端硬碟讀取各社活動相片，相簿列表與可分享連結；需 GAS 部署與 GAS_ALBUM_WEB_APP_URL。
+    description: 由共用雲端硬碟讀取各社活動相片，年度→活動相簿→相片；可檢視單一相片、分享連結。需 GAS 部署與 GAS_ALBUM_WEB_APP_URL。
     updated_at: "2026-02-22"
 
 apis:
